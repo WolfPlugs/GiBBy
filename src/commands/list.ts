@@ -1,8 +1,8 @@
 import {
-    CommandInteraction,
     SlashCommandBuilder,
     User,
     EmbedBuilder,
+    ChatInputCommandInteraction,
 } from 'discord.js';
 import { getBadges } from '../mongo.js';
 export const data = new SlashCommandBuilder()
@@ -15,7 +15,7 @@ export const data = new SlashCommandBuilder()
             .setRequired(false),
     );
 
-export async function execute(interaction: CommandInteraction) {
+export async function execute(interaction: ChatInputCommandInteraction) {
     let user = interaction.user;
     if (interaction.options.getUser('user') !== null) {
         user = interaction.options.getUser('user') as User;

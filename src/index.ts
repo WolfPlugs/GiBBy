@@ -1,4 +1,10 @@
-import { Client, GatewayIntentBits, Events } from 'discord.js';
+import {
+    Client,
+    GatewayIntentBits,
+    Events,
+    ChatInputCommandInteraction,
+    ButtonInteraction,
+} from 'discord.js';
 import { destroy } from './mongo.js';
 import credentials from '../config/credentials.json' assert { type: 'json' };
 
@@ -14,10 +20,21 @@ import { indexCommands } from './lib/indexer.js';
 await indexCommands();
 import { pushCommands } from './lib/pushCommands.js';
 await pushCommands();
-import { handleInteraction } from './lib/interactionHandler.js';
 import { commands } from './lib/indexer.js';
+import { handleCommand } from './handler/command.js';
+import { handleButton } from './handler/button.js';
 client.on(Events.InteractionCreate, async (interaction) => {
-    await handleInteraction(interaction, client, commands);
+    if (interaction.isCommand()) {
+        await handleCommand(
+            interaction as ChatInputCommandInteraction,
+            client,
+            commands,
+        );
+    } else if (interaction.isButton()) {
+        await handleButton(interaction as ButtonInteraction, client, commands);
+    } else if (interaction.isAutocomplete()) {
+        console.log('Autocomplete interaction received');
+    }
 });
 
 client.on(Events.Error, (error) => console.error(error));

@@ -9,14 +9,10 @@ const restAPI = new REST({ version: '10' }).setToken(credentials.DiscordToken);
 export async function pushCommands(): Promise<void> {
     try {
         console.log(
-            `Pushing ${commandData.length} commands to guild ${settings.guildID}`,
-            await restAPI.put(
-                Routes.applicationGuildCommands(
-                    settings.clientID,
-                    settings.guildID,
-                ),
-                { body: commandData },
-            ),
+            `Pushing ${commandData.length} commands...`,
+            await restAPI.put(Routes.applicationCommands(settings.clientID), {
+                body: commandData,
+            }),
         );
     } catch (error) {
         console.error(error);

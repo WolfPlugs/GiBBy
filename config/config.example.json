@@ -1,5 +1,6 @@
 {
     "clientID": "BotID",
     "DatabaseName": "GlobalBadges",
-    "CollectionName": "database"
+    "CollectionName": "database",
+    "maxBadges": 5
 }

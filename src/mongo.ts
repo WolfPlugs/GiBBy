@@ -45,6 +45,30 @@ export async function getPending(userId: string): Promise<Badge[]> {
     return entry['pending'];
 }
 
-export async function pendBadge(userId: string, badge: Badge) {
+export async function pendBadge(userId: string, badge: Badge): Promise<void> {
     await mongo.updateOne({ userId }, { $push: { pending: badge } });
+}
+
+export async function canMakeNewBadge(userId: string): Promise<boolean> {
+    const entry = await getEntry(userId);
+    if (!entry) return true;
+    if (entry.badges.length + entry.pending.length >= settings.maxBadges) {
+        return false;
+    }
+    return true;
+}
+
+export async function newPending(userId: string, badge: Badge): Promise<void> {
+    await mongo.updateOne({ userId }, { $push: { pending: badge } });
+}
+
+export async function deleteBadge(userId: string, name: string): Promise<void> {
+    await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
+}
+
+export async function deletePending(
+    userId: string,
+    name: string,
+): Promise<void> {
+    await mongo.updateOne({ userId }, { $pull: { pending: { name } } });
 }
