@@ -1,22 +1,22 @@
-import { ButtonInteraction, Client } from 'discord.js';
+import type { ButtonInteraction, Client } from 'discord.js';
+import type { Command } from '../types/command.js';
+import { Button } from '../types/button.js';
 
-export async function handleButton(
+export function handleButton(
     interaction: ButtonInteraction,
     client: Client,
-    commands: Map<string, any>, // TYPE THIS
-): Promise<void> {
-    console.log(
-        `[Interaction Handler]: Button interaction received: ${interaction}`,
-    );
-
+    commands: Map<string, Command>, // TYPE THIS
+): void {
     for (const command of commands) {
         const buttons = command[1]?.buttons;
         if (!buttons) continue;
-        buttons.forEach(async (button: any) => {
-            //THIS NEEDS TYPING
-            if (button.id === interaction.customId) {
-                await button.execute(interaction, client);
-            }
+        // This might not work due to not being fully async
+        buttons.forEach((button: Button) => {
+            async () => {
+                if (button.id === interaction.customId) {
+                    await button.execute(interaction, client);
+                }
+            };
         });
     }
 }

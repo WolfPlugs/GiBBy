@@ -1,19 +1,13 @@
-import {
+import { SlashCommandBuilder } from 'discord.js';
+import type {
     ChatInputCommandInteraction,
-    SlashCommandBuilder,
-    EmbedBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    StringSelectMenuBuilder,
-    StringSelectMenuOptionBuilder,
-    ActionRowBuilder,
     ButtonInteraction,
 } from 'discord.js';
 import {
     canMakeNewBadge,
     getBadges,
     getPending,
-    newPending,
+    pendBadge,
     isBlocked,
     deleteBadge,
     deletePending,
@@ -67,15 +61,15 @@ export const data = new SlashCommandBuilder()
             )
             .addStringOption((option) =>
                 option
-                    .setName('name')
+                    .setName('new-name')
                     .setDescription('The new name of the badge')
-                    .setRequired(false),
+                    .setRequired(true),
             )
             .addStringOption((option) =>
                 option
                     .setName('url')
                     .setDescription('The new image URL of the badge')
-                    .setRequired(false),
+                    .setRequired(true),
             ),
     );
 
@@ -101,9 +95,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             });
             return;
         }
-        const name = interaction.options.getString('name')!;
-        const url = interaction.options.getString('url')!;
-        if (badges.find((badge) => badge.name === name)) {
+        // These WILL exist because they are required by the slash command
+        const newName = interaction.options.getString('name');
+        const url = interaction.options.getString('url');
+        if (badges.find((badge) => badge.name === newName)) {
             await interaction.reply({
                 content: 'You already have a badge with that name!',
                 ephemeral: true,
@@ -117,14 +112,23 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             });
             return;
         }
-        await newPending(interaction.user.id, { name, badge: url }).then(
-            async () => {
-                await interaction.reply({
-                    content: 'Badge is now pending approval!',
-                    ephemeral: true,
-                });
-            },
-        );
+        if (!url || !newName) {
+            // Mandatory typescript satisfaction time - These are required by the slash command and should never *NOT* exist, but typescript doesn't know that
+            console.log('[This should never happen]: No data');
+            await interaction.reply(
+                'Something went very wrong. Please contact an admin. Error: ```[This should never happen]: No data```',
+            );
+            return;
+        }
+        await pendBadge(interaction.user.id, {
+            name: newName,
+            badge: url,
+        }).then(async () => {
+            await interaction.reply({
+                content: 'Badge is now pending approval!',
+                ephemeral: true,
+            });
+        });
     }
 
     // DELETE BADGE --------------------------------------------------------------------------------------------
@@ -166,7 +170,7 @@ export const buttons = [
     {
         id: 'manage.delete',
         execute: async function (interaction: ButtonInteraction) {
-            console.log('Button!!!');
+            await interaction.reply('Button clicked!');
         },
     },
 ];

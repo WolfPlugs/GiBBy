@@ -1,9 +1,6 @@
-import {
-    SlashCommandBuilder,
-    User,
-    EmbedBuilder,
-    ChatInputCommandInteraction,
-} from 'discord.js';
+import { SlashCommandBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
+import type { User, ChatInputCommandInteraction } from 'discord.js';
 import { getBadges } from '../mongo.js';
 export const data = new SlashCommandBuilder()
     .setName('list')

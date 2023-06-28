@@ -1,10 +1,5 @@
-import {
-    Client,
-    GatewayIntentBits,
-    Events,
-    ChatInputCommandInteraction,
-    ButtonInteraction,
-} from 'discord.js';
+import { Client, GatewayIntentBits, Events } from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
 import { destroy } from './mongo.js';
 import credentials from '../config/credentials.json' assert { type: 'json' };
 
@@ -31,7 +26,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
             commands,
         );
     } else if (interaction.isButton()) {
-        await handleButton(interaction as ButtonInteraction, client, commands);
+        // L13 - handler/button.ts - This should probably be async, but we will have to see
+        handleButton(interaction, client, commands);
     } else if (interaction.isAutocomplete()) {
         console.log('Autocomplete interaction received');
     }
@@ -39,10 +35,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on(Events.Error, (error) => console.error(error));
 client.on(Events.Warn, (warning) => console.warn(warning));
-client.on(Events.Invalidated, () => {
+client.on(Events.Invalidated, async () => {
     console.log('Session Invalidated - Stopping Client');
     client.destroy();
-    destroy();
+    await destroy();
     process.exit(1);
 });
 
