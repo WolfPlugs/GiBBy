@@ -2,5 +2,6 @@
     "clientID": "BotID",
     "DatabaseName": "GlobalBadges",
     "CollectionName": "database",
-    "maxBadges": 5
+    "maxBadges": 5,
+    "promptChannel": "ChannelID"
 }

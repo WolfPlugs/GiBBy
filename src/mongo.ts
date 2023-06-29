@@ -16,23 +16,18 @@ async function connect(): Promise<Collection> {
 
 const mongo = await connect();
 
-export async function getBadges(userId: string): Promise<Badge[]> {
-    const entry = await mongo.findOne({ userId });
-    if (!entry) return [];
-    return entry['badges'] as Badge[];
-}
-
-async function newEntry(userId: string): Promise<void> {
-    await mongo.insertOne({ userId, badges: [], pending: [] });
-}
-
-async function cleanEntry(userId: string): Promise<void> {
+async function lint(userId: string): Promise<void> {
     // We should probably just run this against the entire database once.
 
     // Make entry if it doesn't exist
     const entry = await mongo.findOne({ userId });
     if (!entry) {
-        await newEntry(userId);
+        await mongo.insertOne({
+            userId,
+            badges: [],
+            pending: [],
+            blocked: false,
+        });
         return;
     }
 
@@ -56,51 +51,63 @@ async function cleanEntry(userId: string): Promise<void> {
     }
 }
 
-export async function isBlocked(userId: string): Promise<boolean> {
-    await cleanEntry(userId);
-    const entry = (await mongo.findOne({ userId })) as Entry;
-    return entry['blocked'];
-}
-
 export async function destroy(): Promise<void> {
     await client.close();
 }
 
 export async function getEntry(userId: string): Promise<Entry> {
-    await cleanEntry(userId);
-    const entry = await mongo.findOne({ userId });
-    return entry as Entry;
+    await lint(userId);
+    return (await mongo.findOne({ userId })) as Entry; // Badge was ensured to be created by lint()
+}
+
+// GETTERS
+
+export async function isBlocked(userId: string): Promise<boolean> {
+    return (await getEntry(userId))['blocked'];
 }
 
 export async function getPending(userId: string): Promise<Badge[]> {
-    await cleanEntry(userId);
-    const entry = (await mongo.findOne({ userId })) as Entry;
-    return entry['pending'];
+    return (await getEntry(userId))['pending'];
 }
 
-export async function pendBadge(userId: string, badge: Badge): Promise<void> {
-    await cleanEntry(userId);
-    await mongo.updateOne({ userId }, { $push: { pending: badge } });
+export async function getBadges(userId: string): Promise<Badge[]> {
+    return (await getEntry(userId))['badges'];
 }
 
 export async function canMakeNewBadge(userId: string): Promise<boolean> {
-    await cleanEntry(userId);
     const entry = await getEntry(userId);
-    if (entry.badges.length + entry.pending.length >= settings.maxBadges) {
-        return false;
-    }
-    return true;
+    return !(entry.badges.length + entry.pending.length >= settings.maxBadges);
 }
 
+// SETTERS
+
+export async function pendBadge(userId: string, badge: Badge): Promise<void> {
+    await lint(userId);
+    await mongo.updateOne({ userId }, { $push: { pending: badge } });
+}
+
+// DELETE FUNCTIONS ARE BROKEN
+
 export async function deleteBadge(userId: string, name: string): Promise<void> {
-    await cleanEntry(userId);
-    await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
+    await lint(userId);
+    await mongo.updateOne({ userId }, { $unset: { badges: { name } } });
 }
 
 export async function deletePending(
     userId: string,
     name: string,
 ): Promise<void> {
-    await cleanEntry(userId);
-    await mongo.updateOne({ userId }, { $pull: { pending: { name } } });
+    await lint(userId);
+    await mongo.updateOne({ userId }, { $unset: { pending: { name } } });
+}
+
+// OTHER
+
+export async function badgeExists(
+    userId: string,
+    name: string,
+): Promise<boolean> {
+    return (await getBadges(userId))
+        .concat(await getPending(userId))
+        .some((badge) => badge.name === name);
 }

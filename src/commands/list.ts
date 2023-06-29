@@ -1,7 +1,9 @@
-import { SlashCommandBuilder } from 'discord.js';
-import { EmbedBuilder } from 'discord.js';
-import type { User, ChatInputCommandInteraction } from 'discord.js';
-import { getBadges } from '../mongo.js';
+import {
+    type ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandBuilder,
+} from 'discord.js';
+import { getBadges, getPending } from '../mongo.js';
 export const data = new SlashCommandBuilder()
     .setName('list')
     .setDescription("List all a user's badges")
@@ -13,11 +15,9 @@ export const data = new SlashCommandBuilder()
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-    let user = interaction.user;
-    if (interaction.options.getUser('user') !== null) {
-        user = interaction.options.getUser('user') as User;
-    }
+    const user = interaction.user;
     const badges = await getBadges(user.id);
+    const pending = await getPending(user.id);
     const returnEmbed = new EmbedBuilder()
         .setTitle(`${user.username}'s Badges`)
         .setDescription(`${user.username} has ${badges.length} badges`)
@@ -25,6 +25,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     for (const badge of badges) {
         returnEmbed.addFields({
             name: badge.name,
+            value: badge.badge,
+        });
+    }
+    for (const badge of pending) {
+        returnEmbed.addFields({
+            name: `${badge.name} (Pending)`,
             value: badge.badge,
         });
     }

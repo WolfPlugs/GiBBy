@@ -1,5 +1,9 @@
-import { Client, GatewayIntentBits, Events } from 'discord.js';
-import type { ChatInputCommandInteraction } from 'discord.js';
+import {
+    Client,
+    GatewayIntentBits,
+    Events,
+    type ChatInputCommandInteraction,
+} from 'discord.js';
 import { destroy } from './mongo.js';
 import credentials from '../config/credentials.json' assert { type: 'json' };
 
