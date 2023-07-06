@@ -1,5 +1,5 @@
 export interface Config {
-    clientID: string;
+    UserId: string;
     DatabaseName: string;
     CollectionName: string;
     maxBadges: number;

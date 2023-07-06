@@ -1,7 +1,7 @@
 {
-    "clientID": "BotID",
+    "ClientId": "Bot ID",
     "DatabaseName": "GlobalBadges",
     "CollectionName": "database",
-    "maxBadges": 5,
+    "MaxBadges": 5,
     "promptChannel": "ChannelID"
 }

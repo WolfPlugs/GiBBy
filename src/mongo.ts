@@ -76,7 +76,7 @@ export async function getBadges(userId: string): Promise<Badge[]> {
 
 export async function canMakeNewBadge(userId: string): Promise<boolean> {
     const entry = await getEntry(userId);
-    return !(entry.badges.length + entry.pending.length >= settings.maxBadges);
+    return !(entry.badges.length + entry.pending.length >= settings.MaxBadges);
 }
 
 // SETTERS

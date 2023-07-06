@@ -7,6 +7,7 @@ export function handleButton(
     client: Client,
     commands: Map<string, Command>, // TYPE THIS
 ): void {
+    console.log(interaction.customId);
     for (const command of commands) {
         const buttons = command[1]?.buttons;
         if (!buttons) continue;
