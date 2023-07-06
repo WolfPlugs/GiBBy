@@ -2,18 +2,25 @@ import {
     SlashCommandBuilder,
     type ChatInputCommandInteraction,
     type ButtonInteraction,
+    AutocompleteInteraction,
 } from 'discord.js';
 import {
     canMakeNewBadge,
     pendBadge,
     isBlocked,
     deleteBadge,
-    deletePending,
     badgeExists,
+    getBadges,
 } from '../mongo.js';
 
-import settings from '../../config/config.json' assert { type: 'json' };
+import untypedConfig from '../../config/config.json' assert { type: 'json' };
 import { fireVerification } from '../handler/verification.js';
+import { isAllowedDomain } from '../lib/checkDomain.js';
+import { Badge } from '../types/badge.js';
+
+import { Config } from '../types/config.js';
+
+const settings = untypedConfig as Config;
 
 export const data = new SlashCommandBuilder()
     .setName('manage')
@@ -26,8 +33,7 @@ export const data = new SlashCommandBuilder()
                 option
                     .setName('name')
                     .setDescription('The name of the badge')
-                    .setRequired(true)
-                    .setAutocomplete(true),
+                    .setRequired(true),
             )
             .addStringOption((option) =>
                 option
@@ -83,7 +89,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         }
         if (!(await canMakeNewBadge(interaction.user.id))) {
             await interaction.reply({
-                content: `You already have ${settings.maxBadges} or more badges! (This includes pending badges!)`,
+                content: `You already have ${settings.MaxBadges} or more badges! (This includes pending badges!)`,
                 ephemeral: true,
             });
             return;
@@ -91,6 +97,14 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         // These WILL exist because they are required by the slash command
         const name = interaction.options.getString('name')!;
         const url = interaction.options.getString('url')!;
+
+        if (!isAllowedDomain(url)) {
+            await interaction.reply({
+                content: 'This is not a whitelisted domain',
+                ephemeral: true,
+            });
+            return;
+        }
         if (await badgeExists(id, name)) {
             await interaction.reply({
                 content: 'You already have a badge with that name!',
@@ -117,15 +131,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         const name = interaction.options.getString('name')!;
         if (await badgeExists(id, name)) {
             await deleteBadge(id, name).then(async () => {
-                await interaction.reply({
-                    content: 'Badge deleted!',
-                    ephemeral: true,
-                });
-            });
-            return;
-        }
-        if (await badgeExists(id, name)) {
-            await deletePending(id, name).then(async () => {
                 await interaction.reply({
                     content: 'Badge deleted!',
                     ephemeral: true,
@@ -184,3 +189,15 @@ export const buttons = [
         },
     },
 ];
+
+export async function autocomplete(interaction: AutocompleteInteraction) {
+    const options: string[] = [];
+    const focus = interaction.options.getFocused();
+    (await getBadges(interaction.user.id, 'all')).forEach((badge: Badge) => {
+        options.push(badge.name);
+    });
+    const filtered = options.filter((option) => option.startsWith(focus));
+    await interaction.respond(
+        filtered.map((option) => ({ name: option, value: option })),
+    );
+}

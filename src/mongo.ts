@@ -32,11 +32,21 @@ async function lint(userId: string): Promise<void> {
     }
 
     // Make new fields if they don't exist
-    if (entry['pending'] === undefined) {
-        await mongo.updateOne({ userId }, { $set: { pending: [] } });
-    }
     if (entry['badges'] === undefined) {
         await mongo.updateOne({ userId }, { $set: { badges: [] } });
+    } else {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        (entry['badges'] as Badge[]).forEach(async (badge: Badge) => {
+            // set badge.pending to false if it does not exist
+            if (badge.pending !== true) {
+                badge.pending = false;
+
+                await mongo.updateOne(
+                    { userId },
+                    { $set: { badges: entry['badges'] as Badge[] } },
+                );
+            }
+        });
     }
     if (entry['blocked'] === undefined) {
         await mongo.updateOne({ userId }, { $set: { blocked: false } });
@@ -66,39 +76,46 @@ export async function isBlocked(userId: string): Promise<boolean> {
     return (await getEntry(userId))['blocked'];
 }
 
-export async function getPending(userId: string): Promise<Badge[]> {
-    return (await getEntry(userId))['pending'];
-}
-
-export async function getBadges(userId: string): Promise<Badge[]> {
-    return (await getEntry(userId))['badges'];
+export async function getBadges(
+    userId: string,
+    only: 'all' | 'pending' | 'active',
+) {
+    const allBadges = (await getEntry(userId))['badges'];
+    const returnArray: Badge[] = [];
+    switch (only) {
+        case 'all':
+            return allBadges;
+        case 'active':
+            allBadges.forEach((badge) => {
+                if (!badge.pending) returnArray.push(badge);
+            });
+            return returnArray;
+        case 'pending':
+            allBadges.forEach((badge) => {
+                if (badge.pending) returnArray.push(badge);
+            });
+            return returnArray;
+    }
 }
 
 export async function canMakeNewBadge(userId: string): Promise<boolean> {
     const entry = await getEntry(userId);
-    return !(entry.badges.length + entry.pending.length >= settings.MaxBadges);
+    return !(entry.badges.length >= settings.MaxBadges);
 }
 
 // SETTERS
 
 export async function pendBadge(userId: string, badge: Badge): Promise<void> {
     await lint(userId);
-    await mongo.updateOne({ userId }, { $push: { pending: badge } });
+    badge.pending = true;
+    await mongo.updateOne({ userId }, { $push: { badges: badge } });
 }
 
-// DELETE FUNCTIONS ARE BROKEN
+// DELETE FUNCTIONS
 
 export async function deleteBadge(userId: string, name: string): Promise<void> {
     await lint(userId);
-    await mongo.updateOne({ userId }, { $unset: { badges: { name } } });
-}
-
-export async function deletePending(
-    userId: string,
-    name: string,
-): Promise<void> {
-    await lint(userId);
-    await mongo.updateOne({ userId }, { $unset: { pending: { name } } });
+    await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 
 // OTHER
@@ -107,7 +124,7 @@ export async function badgeExists(
     userId: string,
     name: string,
 ): Promise<boolean> {
-    return (await getBadges(userId))
-        .concat(await getPending(userId))
-        .some((badge) => badge.name === name);
+    return (await getBadges(userId, 'all')).some(
+        (badge) => badge.name === name,
+    );
 }

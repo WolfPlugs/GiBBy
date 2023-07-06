@@ -6,5 +6,4 @@ export interface Entry {
     userID: string;
     badges: Badge[];
     blocked: boolean;
-    pending: Badge[];
 }

@@ -1,8 +1,13 @@
 import { commandData } from './indexer.js';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v10';
-import credentials from '../../config/credentials.json' assert { type: 'json' };
-import settings from '../../config/config.json' assert { type: 'json' };
+import untypedCredentials from '../../config/credentials.json' assert { type: 'json' };
+import untypedConfig from '../../config/config.json' assert { type: 'json' };
+
+import { Config, Credentials } from '../types/config.js';
+
+const settings = untypedConfig as Config;
+const credentials = untypedCredentials as Credentials;
 
 const restAPI = new REST({ version: '10' }).setToken(credentials.DiscordToken);
 

@@ -3,5 +3,10 @@
     "DatabaseName": "GlobalBadges",
     "CollectionName": "database",
     "MaxBadges": 5,
-    "promptChannel": "ChannelID"
+    "PromptChannel": "ChannelID",
+    "Domains": [
+        "media.discordapp.net",
+        "cdn.discordapp.com",
+        "tenor.com"
+    ]
 }

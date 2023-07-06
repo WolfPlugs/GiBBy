@@ -1,4 +1,7 @@
-import settings from '../../config/config.json' assert { type: 'json' };
+import untypedSettings from '../../config/config.json' assert { type: 'json' };
+import { Config } from '../types/config.js';
+
+const settings = untypedSettings as Config;
 import {
     EmbedBuilder,
     ChatInputCommandInteraction,
@@ -55,6 +58,6 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
     );
 
     await (
-        data.client.channels.cache.get(settings.promptChannel) as TextChannel
+        data.client.channels.cache.get(settings.PromptChannel) as TextChannel
     ).send({ embeds: [embed], components: [buttons] });
 }

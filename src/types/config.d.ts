@@ -1,9 +1,10 @@
 export interface Config {
-    UserId: string;
+    ClientId: string;
     DatabaseName: string;
     CollectionName: string;
-    maxBadges: number;
-    promptChannel: string;
+    MaxBadges: number;
+    PromptChannel: string;
+    Domains: string[];
 }
 
 export interface Credentials {

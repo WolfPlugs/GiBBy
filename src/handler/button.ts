@@ -11,13 +11,11 @@ export function handleButton(
     for (const command of commands) {
         const buttons = command[1]?.buttons;
         if (!buttons) continue;
-        // This might not work due to not being fully async
-        buttons.forEach((button: Button) => {
-            async () => {
-                if (button.id === interaction.customId) {
-                    await button.execute(interaction, client);
-                }
-            };
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        buttons.forEach(async (button: Button) => {
+            if (button.id === interaction.customId) {
+                await button.execute(interaction, client);
+            }
         });
     }
 }

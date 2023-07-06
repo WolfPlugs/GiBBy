@@ -22,6 +22,7 @@ await pushCommands();
 import { commands } from './lib/indexer.js';
 import { handleCommand } from './handler/command.js';
 import { handleButton } from './handler/button.js';
+import { handleAutocomplete } from './handler/autocomplete.js';
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         await handleCommand(
@@ -33,7 +34,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         // L13 - handler/button.ts - This should probably be async, but we will have to see
         handleButton(interaction, client, commands);
     } else if (interaction.isAutocomplete()) {
-        console.log('Autocomplete interaction received');
+        await handleAutocomplete(interaction, client, commands);
     }
 });
 
