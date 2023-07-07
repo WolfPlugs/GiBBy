@@ -4,6 +4,7 @@ export interface Config {
     CollectionName: string;
     MaxBadges: number;
     PromptChannel: string;
+    VerifierRole: string;
     Domains: string[];
 }
 

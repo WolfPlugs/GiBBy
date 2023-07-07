@@ -26,6 +26,10 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
         .setStyle(ButtonStyle.Danger)
         .setEmoji('✖️');
 
+    /*
+    We may want to embed some data into the embed somewhere... ex. user ID, badge, etc.
+    */
+
     const embed = new EmbedBuilder()
         .setAuthor({
             name: user.username,

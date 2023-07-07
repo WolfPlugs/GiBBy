@@ -14,7 +14,7 @@ import {
 } from '../mongo.js';
 
 import untypedConfig from '../../config/config.json' assert { type: 'json' };
-import { fireVerification } from '../handler/verification.js';
+import { fireVerification } from '../lib/verification.js';
 import { isAllowedDomain } from '../lib/checkDomain.js';
 import { Badge } from '../types/badge.js';
 
@@ -183,9 +183,40 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
 export const buttons = [
     {
-        id: 'manage.delete',
-        execute: async function (interaction: ButtonInteraction) {
-            await interaction.reply('Button clicked!');
+        id: 'verify.accept',
+        execute: async (interaction: ButtonInteraction) => {
+            if (interaction.inCachedGuild()) {
+                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                    await interaction.reply({
+                        content: '`verify.accept`',
+                        ephemeral: true,
+                    });
+                } else {
+                    await interaction.reply({
+                        content: 'You cannot do that!',
+                        ephemeral: true,
+                    });
+                }
+            }
+            console.log(interaction);
+        },
+    },
+    {
+        id: 'verify.deny',
+        execute: async (interaction: ButtonInteraction) => {
+            if (interaction.inCachedGuild()) {
+                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                    await interaction.reply({
+                        content: '`verify.deny`',
+                        ephemeral: true,
+                    });
+                } else {
+                    await interaction.reply({
+                        content: 'You cannot do that!',
+                        ephemeral: true,
+                    });
+                }
+            }
         },
     },
 ];

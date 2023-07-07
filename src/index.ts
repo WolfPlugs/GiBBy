@@ -31,7 +31,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
             commands,
         );
     } else if (interaction.isButton()) {
-        // L13 - handler/button.ts - This should probably be async, but we will have to see
         handleButton(interaction, client, commands);
     } else if (interaction.isAutocomplete()) {
         await handleAutocomplete(interaction, client, commands);

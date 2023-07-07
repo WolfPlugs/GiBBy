@@ -4,6 +4,7 @@
     "CollectionName": "database",
     "MaxBadges": 5,
     "PromptChannel": "ChannelID",
+    "VerifierRole": "554356800",
     "Domains": [
         "media.discordapp.net",
         "cdn.discordapp.com",
