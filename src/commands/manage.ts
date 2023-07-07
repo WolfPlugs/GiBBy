@@ -209,10 +209,6 @@ export const buttons = [
         execute: async (interaction: ButtonInteraction) => {
             if (interaction.inCachedGuild()) {
                 if (interaction.member.roles.cache.has(settings.VerifierRole)) {
-                    await interaction.reply({
-                        content: '`verify.accept`',
-                        ephemeral: true,
-                    });
                     const newEmbed = EmbedBuilder.from(
                         interaction.message.embeds.at(0)!,
                     )
@@ -246,10 +242,6 @@ export const buttons = [
                     interaction.member.roles.cache.has(settings.VerifierRole) ||
                     originalPrompter == interaction.user
                 ) {
-                    await interaction.reply({
-                        content: '`verify.deny`',
-                        ephemeral: true,
-                    });
                     const newEmbed = EmbedBuilder.from(
                         interaction.message.embeds.at(0)!,
                     )
