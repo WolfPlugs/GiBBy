@@ -15,7 +15,10 @@ export const data = new SlashCommandBuilder()
     );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-    const user = interaction.user;
+    let user = interaction.user;
+    if (interaction.options.getUser('user')) {
+        user = interaction.options.getUser('user')!;
+    }
     const badges = await getBadges(user.id, 'all');
     const returnEmbed = new EmbedBuilder()
         .setTitle(`${user.username}'s Badges`)
