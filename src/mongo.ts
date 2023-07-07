@@ -111,6 +111,26 @@ export async function pendBadge(userId: string, badge: Badge): Promise<void> {
     await mongo.updateOne({ userId }, { $push: { badges: badge } });
 }
 
+export async function approveBadge(
+    userId: string,
+    name: string,
+): Promise<void> {
+    await mongo.updateOne(
+        { userId, 'badges.name': name },
+        { $set: { 'badges.$.pending': false } },
+    );
+}
+
+export async function blockUser(userId: string): Promise<void> {
+    await lint(userId);
+    await mongo.updateOne({ userId }, { $push: { blocked: true } });
+}
+
+export async function unblockUser(userId: string): Promise<void> {
+    await lint(userId);
+    await mongo.updateOne({ userId }, { $push: { blocked: false } });
+}
+
 // DELETE FUNCTIONS
 
 export async function deleteBadge(userId: string, name: string): Promise<void> {
@@ -123,8 +143,7 @@ export async function deleteBadge(userId: string, name: string): Promise<void> {
 export async function badgeExists(
     userId: string,
     name: string,
+    only: 'all' | 'pending' | 'active',
 ): Promise<boolean> {
-    return (await getBadges(userId, 'all')).some(
-        (badge) => badge.name === name,
-    );
+    return (await getBadges(userId, only)).some((badge) => badge.name === name);
 }

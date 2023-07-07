@@ -38,7 +38,7 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
         .setImage(badgeURL)
         .addFields({
             name: 'Badge Name',
-            value: `**${badgeName}**`,
+            value: badgeName,
         })
         .addFields({
             name: 'URL:',
@@ -63,5 +63,9 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
 
     await (
         data.client.channels.cache.get(settings.PromptChannel) as TextChannel
-    ).send({ embeds: [embed], components: [buttons] });
+    ).send({
+        content: `<@${user.id}>`,
+        embeds: [embed],
+        components: [buttons],
+    });
 }

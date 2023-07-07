@@ -2,7 +2,11 @@ import {
     SlashCommandBuilder,
     type ChatInputCommandInteraction,
     type ButtonInteraction,
-    AutocompleteInteraction,
+    type AutocompleteInteraction,
+    EmbedBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ActionRowBuilder,
 } from 'discord.js';
 import {
     canMakeNewBadge,
@@ -11,6 +15,8 @@ import {
     deleteBadge,
     badgeExists,
     getBadges,
+    approveBadge,
+    blockUser,
 } from '../mongo.js';
 
 import untypedConfig from '../../config/config.json' assert { type: 'json' };
@@ -105,7 +111,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             });
             return;
         }
-        if (await badgeExists(id, name)) {
+        if (await badgeExists(id, name, 'all')) {
             await interaction.reply({
                 content: 'You already have a badge with that name!',
                 ephemeral: true,
@@ -129,7 +135,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     if (interaction.options.getSubcommand() === 'delete') {
         const name = interaction.options.getString('name')!;
-        if (await badgeExists(id, name)) {
+        if (await badgeExists(id, name, 'active')) {
             await deleteBadge(id, name).then(async () => {
                 await interaction.reply({
                     content: 'Badge deleted!',
@@ -139,7 +145,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             return;
         }
         await interaction.reply({
-            content: 'You do not have a badge with that name!',
+            content: 'You do not have an active badge with that name!',
             ephemeral: true,
         });
         return;
@@ -158,9 +164,9 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             });
             return;
         }
-        if (!(await badgeExists(id, name))) {
+        if (!(await badgeExists(id, name, 'active'))) {
             await interaction.reply({
-                content: 'You do not have a badge with that name!',
+                content: 'You do not have an active badge with that name!',
                 ephemeral: true,
             });
             return;
@@ -181,6 +187,22 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     }
 }
 
+const blockActionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+        .setCustomId('verify.block')
+        .setStyle(ButtonStyle.Danger)
+        .setEmoji('⛔')
+        .setLabel('Block User'),
+);
+
+const unblockButtonRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder()
+        .setCustomId('verify.unblock')
+        .setStyle(ButtonStyle.Danger)
+        .setEmoji('🔑')
+        .setLabel('Unblock User'),
+);
+
 export const buttons = [
     {
         id: 'verify.accept',
@@ -191,6 +213,21 @@ export const buttons = [
                         content: '`verify.accept`',
                         ephemeral: true,
                     });
+                    const newEmbed = EmbedBuilder.from(
+                        interaction.message.embeds.at(0)!,
+                    )
+                        .setFooter({
+                            text: `Approved by ${interaction.user.username}`,
+                        })
+                        .setColor('#00FF00');
+                    await interaction.message.edit({
+                        embeds: [newEmbed],
+                        components: [],
+                    });
+                    await approveBadge(
+                        interaction.message.mentions.users.at(0)!.id,
+                        interaction.message.embeds.at(0)!.fields[0]!.value,
+                    );
                 } else {
                     await interaction.reply({
                         content: 'You cannot do that!',
@@ -198,22 +235,86 @@ export const buttons = [
                     });
                 }
             }
-            console.log(interaction);
         },
     },
     {
         id: 'verify.deny',
         execute: async (interaction: ButtonInteraction) => {
+            const originalPrompter = interaction.message.mentions.users.at(0)!;
             if (interaction.inCachedGuild()) {
-                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                if (
+                    interaction.member.roles.cache.has(settings.VerifierRole) ||
+                    originalPrompter == interaction.user
+                ) {
                     await interaction.reply({
                         content: '`verify.deny`',
                         ephemeral: true,
                     });
+                    const newEmbed = EmbedBuilder.from(
+                        interaction.message.embeds.at(0)!,
+                    )
+                        .setFooter({
+                            text: `Denied by ${interaction.user.username}`,
+                        })
+                        .setColor('#FF0000');
+                    await interaction.message.edit({
+                        embeds: [newEmbed],
+                        components: [blockActionRow],
+                    });
+                    await deleteBadge(
+                        originalPrompter.id,
+                        interaction.message.embeds.at(0)!.fields[0]!.value,
+                    );
                 } else {
                     await interaction.reply({
                         content: 'You cannot do that!',
                         ephemeral: true,
+                    });
+                }
+            }
+        },
+    },
+    {
+        id: 'verify.block',
+        execute: async (interaction: ButtonInteraction) => {
+            if (interaction.inCachedGuild()) {
+                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                    await blockUser(
+                        interaction.message.mentions.users.at(0)!.id,
+                    );
+                    const newEmbed = EmbedBuilder.from(
+                        interaction.message.embeds.at(0)!,
+                    )
+                        .setFooter({
+                            text: `Blocked by ${interaction.user.username}`,
+                        })
+                        .setColor('#000000');
+                    await interaction.message.edit({
+                        embeds: [newEmbed],
+                        components: [unblockButtonRow],
+                    });
+                }
+            }
+        },
+    },
+    {
+        id: 'verify.unblock',
+        execute: async (interaction: ButtonInteraction) => {
+            if (interaction.inCachedGuild()) {
+                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                    await blockUser(
+                        interaction.message.mentions.users.at(0)!.id,
+                    );
+                    const newEmbed = EmbedBuilder.from(
+                        interaction.message.embeds.at(0)!,
+                    )
+                        .setFooter({
+                            text: `Unblocked by ${interaction.user.username}`,
+                        })
+                        .setColor('#FF0000');
+                    await interaction.message.edit({
+                        embeds: [newEmbed],
+                        components: [unblockButtonRow],
                     });
                 }
             }
