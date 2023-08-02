@@ -1,58 +1,63 @@
 import {
-  type ChatInputCommandInteraction,
-  EmbedBuilder,
-  SlashCommandBuilder,
-} from "discord.js";
-import { badgeExists, deleteBadge } from "../mongo.js";
+    type ChatInputCommandInteraction,
+    SlashCommandBuilder,
+} from 'discord.js';
+import { badgeExists, deleteBadge } from '../mongo.js';
+import untypedConfig from '../../config/config.json' assert { type: 'json' };
+import type { Config } from '../types/config.js';
+const settings = untypedConfig as Config;
 
 export const data = new SlashCommandBuilder()
-  .setName("admin")
-  .setDescription("List all a user's badges")
-  .addSubcommand((subcommand) =>
-    subcommand
-      .setName("delete")
-      .setDescription("Delete a badge")
-      .addStringOption((option) =>
-        option
-          .setName("name")
-          .setDescription("The name of the badge")
-          .setRequired(true)
-          .setAutocomplete(true)
-      )
-      .addStringOption((option) =>
-        option
-          .setName("user")
-          .setDescription("The user trying to delete the badge from")
-          .setRequired(true)
-      )
-  );
+    .setName('admin')
+    .setDescription("List all a user's badges")
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName('delete')
+            .setDescription('Delete a badge')
+            .addStringOption(
+                (option) =>
+                    option
+                        .setName('name')
+                        .setDescription('The name of the badge')
+                        .setRequired(true),
+                //.setAutocomplete(true), // Implement later
+            )
+            .addStringOption((option) =>
+                option
+                    .setName('user')
+                    .setDescription('The user to delete the badge form')
+                    .setRequired(true),
+            ),
+    );
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  let user = interaction.user;
+    if (interaction.inCachedGuild()) {
+        if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+            const selectedUser = interaction.options.getUser('user')!; // User will be defined as it is required by command
 
-  if (!interaction.options.getUser("user"))
-    return await interaction.reply({
-      content: "Please mention a user",
-      ephemeral: true,
-    });
-  user = interaction.options.getUser("user")!;
-
-  if (interaction.options.getSubcommand() === "delete") {
-    const name = interaction.options.getString("name")!;
-    if (await badgeExists(user.id, name, "active")) {
-      await deleteBadge(user.id, name).then(async () => {
-        await interaction.reply({
-          content: `Deleted badge ${name} from ${user.username}`,
-          ephemeral: true,
-        });
-        try {
-          await user.send({
-            content: `Your badge ${name} has been deleted for breaking the rules`,
-          });
-        } catch (e) {
-          return;
+            if (interaction.options.getSubcommand() === 'delete') {
+                const name = interaction.options.getString('name')!;
+                if (await badgeExists(selectedUser.id, name, 'active')) {
+                    await deleteBadge(selectedUser.id, name).then(async () => {
+                        await interaction.reply({
+                            content: `Deleted badge ${name} from ${selectedUser.username}`,
+                            ephemeral: true,
+                        });
+                        try {
+                            return await selectedUser.send({
+                                content: `Your badge ${name} has been deleted for breaking the rules`,
+                            });
+                        } catch (e) {
+                            return;
+                        }
+                    });
+                }
+            }
+        } else {
+            await interaction.reply({
+                content: 'You are not authorized to use this command',
+                ephemeral: true,
+            });
         }
-      });
     }
-  }
 }
