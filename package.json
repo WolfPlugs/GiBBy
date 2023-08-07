@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^1.7.1",
-    "discord-api-types": "^0.37.51",
+    "discord-api-types": "^0.37.52",
     "discord.js": "^14.12.1",
     "mongodb": "^5.7.0"
   }
