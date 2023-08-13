@@ -73,7 +73,9 @@ export const data = new SlashCommandBuilder()
             ),
     );
 
-export async function execute(interaction: ChatInputCommandInteraction) {
+export async function execute(
+    interaction: ChatInputCommandInteraction,
+): Promise<void> {
     const id = interaction.user.id;
 
     // NEW BADGE ----------------------------------------------------------------------------------------------
@@ -99,10 +101,11 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         const url = interaction.options.getString('url')!;
 
         if (/<:(.*):(.*)>/.test(name)) {
-            return await interaction.reply({
+            await interaction.reply({
                 content:
                     'Custom emojis will not appear in the badge name, and are thus blocked.',
             });
+            return;
         }
 
         if (!(await isAllowedDomain(url))) {
