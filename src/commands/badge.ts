@@ -98,6 +98,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         const name = interaction.options.getString('name')!;
         const url = interaction.options.getString('url')!;
 
+        if (/<:(.*):(.*)>/.test(name)) {
+            return await interaction.reply({
+                content:
+                    'Custom emojis will not appear in the badge name, and are thus blocked.',
+            });
+        }
+
         if (!(await isAllowedDomain(url))) {
             await interaction.reply({
                 content:
