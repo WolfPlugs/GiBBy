@@ -1,5 +1,5 @@
 {
-  "name": "GiBBy",
+  "name": "gibby",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -9,10 +9,10 @@
     "lint": "eslint src/**/* config/* -c .eslintrc"
   },
   "devDependencies": {
-    "@types/node": "^20.4.5",
+    "@types/node": "^20.4.10",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.46.0",
+    "eslint": "^8.47.0",
     "eslint-plugin-json": "^3.1.0",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@discordjs/rest": "^1.7.1",
-    "discord-api-types": "^0.37.51",
+    "discord-api-types": "^0.37.52",
     "discord.js": "^14.12.1",
     "mongodb": "^5.7.0"
   }

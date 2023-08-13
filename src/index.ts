@@ -41,7 +41,7 @@ client.on(Events.Error, (error) => console.error(error));
 client.on(Events.Warn, (warning) => console.warn(warning));
 client.on(Events.Invalidated, async () => {
     console.log('Session Invalidated - Stopping Client');
-    client.destroy();
+    await client.destroy();
     await destroy();
     process.exit(1);
 });

@@ -123,12 +123,12 @@ export async function approveBadge(
 
 export async function blockUser(userId: string): Promise<void> {
     await lint(userId);
-    await mongo.updateOne({ userId }, { $push: { blocked: true } });
+    await mongo.updateOne({ userId }, { $set: { blocked: true } });
 }
 
 export async function unblockUser(userId: string): Promise<void> {
     await lint(userId);
-    await mongo.updateOne({ userId }, { $push: { blocked: false } });
+    await mongo.updateOne({ userId }, { $set: { blocked: false } });
 }
 
 // DELETE FUNCTIONS

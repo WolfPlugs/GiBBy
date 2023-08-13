@@ -17,6 +17,7 @@ import {
     getBadges,
     approveBadge,
     blockUser,
+    unblockUser,
 } from '../mongo.js';
 
 import untypedConfig from '../../config/config.json' assert { type: 'json' };
@@ -29,7 +30,7 @@ import { Config } from '../types/config.js';
 const settings = untypedConfig as Config;
 
 export const data = new SlashCommandBuilder()
-    .setName('manage')
+    .setName('badge')
     .setDescription('Manage your badges')
     .addSubcommand((subcommand) =>
         subcommand
@@ -62,20 +63,13 @@ export const data = new SlashCommandBuilder()
     )
     .addSubcommand((subcommand) =>
         subcommand
-            .setName('url')
-            .setDescription("Change a badge's URL")
-            .addStringOption((option) =>
+            .setName('list')
+            .setDescription("List a user's badges (defaults to you)")
+            .addUserOption((option) =>
                 option
-                    .setName('name')
-                    .setDescription('The name of the badge')
-                    .setRequired(true)
-                    .setAutocomplete(true),
-            )
-            .addStringOption((option) =>
-                option
-                    .setName('url')
-                    .setDescription('The new image URL of the badge')
-                    .setRequired(true),
+                    .setName('user')
+                    .setDescription('Optional user to check badges for')
+                    .setRequired(false),
             ),
     );
 
@@ -104,9 +98,10 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         const name = interaction.options.getString('name')!;
         const url = interaction.options.getString('url')!;
 
-        if (!isAllowedDomain(url)) {
+        if (!(await isAllowedDomain(url))) {
             await interaction.reply({
-                content: 'This is not a whitelisted domain',
+                content:
+                    'This is not a whitelisted domain or it is improperly formatted',
                 ephemeral: true,
             });
             return;
@@ -150,40 +145,32 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         });
         return;
     }
+    // LIST BADGES ---------------------------------------------------------------------------------------------
 
-    // EDIT BADGE ----------------------------------------------------------------------------------------------
+    if (interaction.options.getSubcommand() === 'list') {
+        let user = interaction.user;
+        if (interaction.options.getUser('user')) {
+            user = interaction.options.getUser('user')!;
+        }
+        const badges = await getBadges(user.id, 'all');
+        const returnEmbed = new EmbedBuilder()
+            .setTitle(`${user.username}'s Badge Overview`)
+            .setDescription(`${user.username} has ${badges.length} badges`)
+            .setColor('#FF0000');
 
-    if (interaction.options.getSubcommand() === 'edit') {
-        const name = interaction.options.getString('name')!;
-        const url = interaction.options.getString('url')!;
-        if (await isBlocked(id)) {
-            await interaction.reply({
-                content:
-                    'You are blocked from editing your badges! Please contact an admin if you believe this is a mistake.',
-                ephemeral: true,
+        for (const badge of badges) {
+            returnEmbed.addFields({
+                name: `${badge.name}${
+                    badge.pending ? ' `(Pending Approval)`' : ''
+                }`,
+                value: badge.badge,
             });
-            return;
         }
-        if (!(await badgeExists(id, name, 'active'))) {
-            await interaction.reply({
-                content: 'You do not have an active badge with that name!',
-                ephemeral: true,
-            });
-            return;
-        }
-        await deleteBadge(id, name).then(async () => {
-            await pendBadge(id, {
-                name,
-                badge: url,
-            }).then(async () => {
-                await interaction.reply({
-                    content: 'Badge is now pending approval!',
-                    ephemeral: true,
-                });
-                await fireVerification(interaction);
-            });
+
+        await interaction.reply({
+            embeds: [returnEmbed],
+            ephemeral: true,
         });
-        return;
     }
 }
 
@@ -216,7 +203,7 @@ export const buttons = [
                             text: `Approved by ${interaction.user.username}`,
                         })
                         .setColor('#00FF00');
-                    await interaction.message.edit({
+                    await interaction.update({
                         embeds: [newEmbed],
                         components: [],
                     });
@@ -249,7 +236,7 @@ export const buttons = [
                             text: `Denied by ${interaction.user.username}`,
                         })
                         .setColor('#FF0000');
-                    await interaction.message.edit({
+                    await interaction.update({
                         embeds: [newEmbed],
                         components: [blockActionRow],
                     });
@@ -281,9 +268,14 @@ export const buttons = [
                             text: `Blocked by ${interaction.user.username}`,
                         })
                         .setColor('#000000');
-                    await interaction.message.edit({
+                    await interaction.update({
                         embeds: [newEmbed],
                         components: [unblockButtonRow],
+                    });
+                } else {
+                    await interaction.reply({
+                        content: 'You cannot do that!',
+                        ephemeral: true,
                     });
                 }
             }
@@ -294,7 +286,7 @@ export const buttons = [
         execute: async (interaction: ButtonInteraction) => {
             if (interaction.inCachedGuild()) {
                 if (interaction.member.roles.cache.has(settings.VerifierRole)) {
-                    await blockUser(
+                    await unblockUser(
                         interaction.message.mentions.users.at(0)!.id,
                     );
                     const newEmbed = EmbedBuilder.from(
@@ -304,9 +296,14 @@ export const buttons = [
                             text: `Unblocked by ${interaction.user.username}`,
                         })
                         .setColor('#FF0000');
-                    await interaction.message.edit({
+                    await interaction.update({
                         embeds: [newEmbed],
-                        components: [unblockButtonRow],
+                        components: [blockActionRow],
+                    });
+                } else {
+                    await interaction.reply({
+                        content: 'You cannot do that!',
+                        ephemeral: true,
                     });
                 }
             }
