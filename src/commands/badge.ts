@@ -89,7 +89,7 @@ export async function execute(
             });
             return;
         }
-        if (!(await canMakeNewBadge(interaction.user.id))) {
+        if (!(await canMakeNewBadge(interaction))) {
             await interaction.reply({
                 content: `You already have ${settings.MaxBadges} or more badges! (This includes pending badges!)`,
                 ephemeral: true,
