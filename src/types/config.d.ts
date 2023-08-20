@@ -3,6 +3,7 @@ export interface Config {
     DatabaseName: string;
     CollectionName: string;
     MaxBadges: number;
+    ExtraBoostBadges: number;
     PromptChannel: string;
     VerifierRole: string;
     Domains: string[];

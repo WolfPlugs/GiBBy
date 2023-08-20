@@ -3,6 +3,7 @@
     "DatabaseName": "GlobalBadges",
     "CollectionName": "database",
     "MaxBadges": 5,
+    "ExtraBoostBadges": 5,
     "PromptChannel": "ChannelID",
     "VerifierRole": "554356800",
     "Domains": [

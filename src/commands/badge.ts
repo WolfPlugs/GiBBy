@@ -7,6 +7,7 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ActionRowBuilder,
+    GuildMember,
 } from 'discord.js';
 import {
     canMakeNewBadge,
@@ -89,9 +90,14 @@ export async function execute(
             });
             return;
         }
-        if (!(await canMakeNewBadge(interaction.user.id))) {
+        if (!(await canMakeNewBadge(interaction.member as GuildMember))) {
             await interaction.reply({
-                content: `You already have ${settings.MaxBadges} or more badges! (This includes pending badges!)`,
+                content: `You already have ${
+                    settings.MaxBadges +
+                    ((interaction.member as GuildMember).premiumSince
+                        ? settings.ExtraBoostBadges
+                        : 0)
+                } or more badges! (This includes pending badges!)`,
                 ephemeral: true,
             });
             return;

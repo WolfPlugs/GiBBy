@@ -1,8 +1,12 @@
-import settings from '../config/config.json' assert { type: 'json' };
+import untypedSettings from '../config/config.json' assert { type: 'json' };
 import credentials from '../config/credentials.json' assert { type: 'json' };
 import { MongoClient, Collection } from 'mongodb';
 import type { Badge } from './types/badge.d.ts';
 import { Entry } from './types/entry.js';
+import { GuildMember } from 'discord.js';
+import { Config } from './types/config.js';
+
+const settings = untypedSettings as Config;
 
 const client = new MongoClient(credentials.MongoDB);
 
@@ -98,9 +102,12 @@ export async function getBadges(
     }
 }
 
-export async function canMakeNewBadge(userId: string): Promise<boolean> {
-    const entry = await getEntry(userId);
-    return !(entry.badges.length >= settings.MaxBadges);
+export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
+    const entry = await getEntry(user.id);
+    return !(
+        entry.badges.length >=
+        settings.MaxBadges + (user.premiumSince ? settings.ExtraBoostBadges : 0)
+    );
 }
 
 // SETTERS
