@@ -3,7 +3,6 @@ import credentials from '../config/credentials.json' assert { type: 'json' };
 import { MongoClient, Collection } from 'mongodb';
 import type { Badge } from './types/badge.d.ts';
 import { Entry } from './types/entry.js';
-import { ChatInputCommandInteraction } from 'discord.js';
 
 const client = new MongoClient(credentials.MongoDB);
 
@@ -99,13 +98,9 @@ export async function getBadges(
     }
 }
 
-export async function canMakeNewBadge(interaction: ChatInputCommandInteraction): Promise<boolean> {
-    const entry = await getEntry(interaction.user.id);
-    if (interaction.member?.roles.cache.has("1139734692002812046")) {
-        return !(entry.badges.length >= settings.MaxBadges + 5);
-    } else {
-        return !(entry.badges.length >= settings.MaxBadges);
-    }
+export async function canMakeNewBadge(userId: string): Promise<boolean> {
+    const entry = await getEntry(userId);
+    return !(entry.badges.length >= settings.MaxBadges);
 }
 
 // SETTERS
