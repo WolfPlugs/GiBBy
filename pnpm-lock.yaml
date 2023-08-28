@@ -9,8 +9,8 @@ dependencies:
     specifier: ^2.0.1
     version: 2.0.1
   discord-api-types:
-    specifier: ^0.37.54
-    version: 0.37.54
+    specifier: ^0.37.55
+    version: 0.37.55
   discord.js:
     specifier: ^14.13.0
     version: 14.13.0
@@ -40,9 +40,6 @@ devDependencies:
   typescript:
     specifier: ^5.1.6
     version: 5.1.6
-  typescript-eslint:
-    specifier: 0.0.1-alpha.0
-    version: 0.0.1-alpha.0
   typescript-eslint-language-service:
     specifier: ^5.0.5
     version: 5.0.5(@typescript-eslint/parser@5.62.0)(eslint@8.47.0)(typescript@5.1.6)
@@ -737,8 +734,8 @@ packages:
     resolution: {integrity: sha512-X4CDiMnDbA3s3RaUXWXmgAIbY1uxab3fqe3qwzg5XutR3wjqi7M3IkgQbsIBzpqBN2YWr/Qdv7JrFRqSgb4TFg==}
     dev: false
 
-  /discord-api-types@0.37.54:
-    resolution: {integrity: sha512-xNO6yzEMfpVSVUa6lOOzgLDy3Gyd8yuBAozGQdjpW9VjRq2Ccboz4FhTrd5v4Hw7pbkCKwnHvddjIYrX0INkUQ==}
+  /discord-api-types@0.37.55:
+    resolution: {integrity: sha512-XIf8AELxg76AH1WzrgB5ziFyIxSs4tLK1XGjFs4oE6t7M7r1B0Chdylaz76ALhvRXAUBGHGFXu/pKAa5Q+LbQg==}
     dev: false
 
   /discord.js@14.13.0:
@@ -1507,10 +1504,6 @@ packages:
       '@typescript-eslint/parser': 5.62.0(eslint@8.47.0)(typescript@5.1.6)
       eslint: 8.47.0
       typescript: 5.1.6
-    dev: true
-
-  /typescript-eslint@0.0.1-alpha.0:
-    resolution: {integrity: sha512-1hNKM37dAWML/2ltRXupOq2uqcdRQyDFphl+341NTPXFLLLiDhErXx8VtaSLh3xP7SyHZdcCgpt9boYYVb3fQg==}
     dev: true
 
   /typescript@5.1.6:
