@@ -22,6 +22,6 @@
     "@discordjs/rest": "^2.0.1",
     "discord-api-types": "^0.37.54",
     "discord.js": "^14.13.0",
-    "mongodb": "^5.7.0"
+    "mongodb": "^5.8.1"
   }
 }
