@@ -110,6 +110,7 @@ export async function execute(
             await interaction.reply({
                 content:
                     'Custom emojis will not appear in the badge name, and are thus blocked.',
+                ephemeral: true,
             });
             return;
         }
