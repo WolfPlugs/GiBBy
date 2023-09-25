@@ -5,7 +5,8 @@ import {
     type ChatInputCommandInteraction,
 } from 'discord.js';
 import { destroy } from './mongo.js';
-import credentials from '../config/credentials.json' assert { type: 'json' };
+import untypedCredentials from '../config/credentials.json' assert { type: 'json' };
+const credentials: Credentials = untypedCredentials as Credentials;
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds],
@@ -23,6 +24,7 @@ import { commands } from './lib/indexer.js';
 import { handleCommand } from './handler/command.js';
 import { handleButton } from './handler/button.js';
 import { handleAutocomplete } from './handler/autocomplete.js';
+import { Credentials } from './types/config.js';
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         await handleCommand(

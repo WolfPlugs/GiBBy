@@ -1,10 +1,13 @@
 import untypedSettings from '../config/config.json' assert { type: 'json' };
-import credentials from '../config/credentials.json' assert { type: 'json' };
+import untypedCredentials from '../config/credentials.json' assert { type: 'json' };
 import { MongoClient, Collection } from 'mongodb';
 import type { Badge } from './types/badge.d.ts';
 import { Entry } from './types/entry.js';
 import { GuildMember } from 'discord.js';
 import { Config } from './types/config.js';
+import type { Credentials } from './types/config.js';
+
+const credentials: Credentials = untypedCredentials as Credentials;
 
 const settings = untypedSettings as Config;
 
