@@ -6,7 +6,7 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/src/index.js",
     "build": "tsc",
-    "lint": "eslint -c .eslintrc.cjs src/**/* config/**/*"
+    "lint": "eslint -c .eslintrc.json src config/*"
   },
   "devDependencies": {
     "@types/node": "^20.7.0",
