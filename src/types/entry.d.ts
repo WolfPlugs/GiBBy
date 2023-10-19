@@ -6,4 +6,5 @@ export interface Entry {
     userID: string;
     badges: Badge[];
     blocked: boolean;
+    imageHash: string;
 }
