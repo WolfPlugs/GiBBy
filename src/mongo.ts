@@ -23,60 +23,12 @@ async function connect(): Promise<Collection> {
 
 const mongo = await connect();
 
-async function lint(userId: string): Promise<void> {
-    // We should probably just run this against the entire database once.
-
-    // Make entry if it doesn't exist
-    const entry = await mongo.findOne({ userId });
-    if (!entry) {
-        await mongo.insertOne({
-            userId,
-            badges: [],
-            pending: [],
-            blocked: false,
-        });
-        return;
-    }
-
-    // Make new fields if they don't exist
-    if (entry['badges'] === undefined) {
-        await mongo.updateOne({ userId }, { $set: { badges: [] } });
-    } else {
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        (entry['badges'] as Badge[]).forEach(async (badge: Badge) => {
-            // set badge.pending to false if it does not exist
-            if (badge.pending !== true) {
-                badge.pending = false;
-
-                await mongo.updateOne(
-                    { userId },
-                    { $set: { badges: entry['badges'] as Badge[] } },
-                );
-            }
-        });
-    }
-    if (entry['blocked'] === undefined) {
-        await mongo.updateOne({ userId }, { $set: { blocked: false } });
-    }
-
-    // Remove deprecated fields if they exist
-    if (entry['badge']) {
-        await mongo.updateOne({ userId }, { $unset: { badge: '' } }); // Check this actually works
-    }
-    if (entry['name']) {
-        await mongo.updateOne({ userId }, { $unset: { name: '' } }); // Check this actually works
-    }
-
-    // TODO: Imgur migration
-}
-
 export async function destroy(): Promise<void> {
     await client.close();
 }
 
 export async function getEntry(userId: string): Promise<Entry> {
-    await lint(userId);
-    return (await mongo.findOne({ userId })) as Entry; // Badge was ensured to be created by lint()
+    return (await mongo.findOne({ userId })) as Entry;
 }
 
 // GETTERS
@@ -128,7 +80,6 @@ export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
 // SETTERS
 
 export async function pendBadge(userId: string, badge: Badge): Promise<void> {
-    await lint(userId);
     badge.pending = true;
     await mongo.updateOne({ userId }, { $push: { badges: badge } });
 }
@@ -144,19 +95,16 @@ export async function approveBadge(
 }
 
 export async function blockUser(userId: string): Promise<void> {
-    await lint(userId);
     await mongo.updateOne({ userId }, { $set: { blocked: true } });
 }
 
 export async function unblockUser(userId: string): Promise<void> {
-    await lint(userId);
     await mongo.updateOne({ userId }, { $set: { blocked: false } });
 }
 
 // DELETE FUNCTIONS
 
 export async function deleteBadge(userId: string, name: string): Promise<void> {
-    await lint(userId);
     await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 
