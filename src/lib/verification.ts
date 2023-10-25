@@ -1,5 +1,5 @@
 import untypedSettings from '../../config/config.json' assert { type: 'json' };
-import { deleteBadge, getBadge } from '../mongo.js';
+import { getBadge } from '../mongo.js';
 import { Config } from '../types/config.js';
 
 const settings = untypedSettings as Config;
@@ -15,7 +15,7 @@ import {
 export async function fireVerification(data: ChatInputCommandInteraction) {
     const user = data.user;
     const badgeName = data.options.getString('name')!;
-    let badge = await getBadge(user.id, badgeName);
+    const badge = await getBadge(user.id, badgeName);
     if (badge === undefined) {
         throw new Error(
             'verification.ts: badge is undefined! Something went really wrong!',
@@ -38,7 +38,7 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
             name: user.username,
             iconURL: user.displayAvatarURL(),
         })
-        .setImage(data.options.getString('url')!)
+        .setImage(data.options.getString('url'))
         .addFields({
             name: 'Badge Name',
             value: badgeName,

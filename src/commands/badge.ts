@@ -19,7 +19,6 @@ import {
     approveBadge,
     blockUser,
     unblockUser,
-    getBadge,
 } from '../mongo.js';
 
 import untypedConfig from '../../config/config.json' assert { type: 'json' };
@@ -28,7 +27,7 @@ import { isAllowedDomain } from '../lib/checkDomain.js';
 import { Badge } from '../types/badge.js';
 
 import { Config } from '../types/config.js';
-import { imgurDelete, imgurUpload } from '../lib/imgur.js';
+import { imgurUpload } from '../lib/imgur.js';
 import { ImgurResponse } from '../types/imgur.js';
 
 const settings = untypedConfig as Config;
