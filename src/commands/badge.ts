@@ -135,7 +135,7 @@ export async function execute(
         }
         const imgurLink: false | ImgurResponse = await imgurUpload(url);
         if (!imgurLink) {
-            interaction.reply({
+            await interaction.reply({
                 content: 'Imgur Error! Contact an admin.',
             });
             return;
@@ -160,7 +160,10 @@ export async function execute(
     if (interaction.options.getSubcommand() === 'delete') {
         const name = interaction.options.getString('name')!;
         if (await badgeExists(id, name, 'active')) {
-            await imgurDelete((await getBadge(id, name))?.imageHash!); // This will exist because it was just checked in the line above
+            const badge = await getBadge(id, name);
+            if (badge?.imageHash) {
+                await imgurDelete(badge.imageHash);
+            }
             await deleteBadge(id, name).then(async () => {
                 await interaction.reply({
                     content: 'Badge deleted!',
