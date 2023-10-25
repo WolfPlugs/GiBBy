@@ -66,6 +66,8 @@ async function lint(userId: string): Promise<void> {
     if (entry['name']) {
         await mongo.updateOne({ userId }, { $unset: { name: '' } }); // Check this actually works
     }
+
+    // TODO: Imgur migration
 }
 
 export async function destroy(): Promise<void> {
@@ -103,6 +105,16 @@ export async function getBadges(
             });
             return returnArray;
     }
+}
+
+export async function getBadge(
+    userId: string,
+    name: string,
+): Promise<Badge | undefined> {
+    const foundBadge = (await getEntry(userId))['badges'].find(
+        (badge) => badge.name === name,
+    );
+    return foundBadge;
 }
 
 export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {

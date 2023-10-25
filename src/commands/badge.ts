@@ -19,6 +19,7 @@ import {
     approveBadge,
     blockUser,
     unblockUser,
+    getBadge,
 } from '../mongo.js';
 
 import untypedConfig from '../../config/config.json' assert { type: 'json' };
@@ -27,6 +28,8 @@ import { isAllowedDomain } from '../lib/checkDomain.js';
 import { Badge } from '../types/badge.js';
 
 import { Config } from '../types/config.js';
+import { imgurDelete, imgurUpload } from '../lib/imgur.js';
+import { ImgurResponse } from '../types/imgur.js';
 
 const settings = untypedConfig as Config;
 
@@ -130,9 +133,18 @@ export async function execute(
             });
             return;
         }
+        const imgurLink: false | ImgurResponse = await imgurUpload(url);
+        if (!imgurLink) {
+            await interaction.reply({
+                content: 'Imgur Error! Contact an admin.',
+            });
+            return;
+        }
+
         await pendBadge(id, {
             name,
-            badge: url,
+            badge: imgurLink.link,
+            imageHash: imgurLink.deletehash,
         }).then(async () => {
             await interaction.reply({
                 content: 'Badge is now pending approval!',
@@ -148,6 +160,10 @@ export async function execute(
     if (interaction.options.getSubcommand() === 'delete') {
         const name = interaction.options.getString('name')!;
         if (await badgeExists(id, name, 'active')) {
+            const badge = await getBadge(id, name);
+            if (badge?.imageHash) {
+                await imgurDelete(badge.imageHash);
+            }
             await deleteBadge(id, name).then(async () => {
                 await interaction.reply({
                     content: 'Badge deleted!',
