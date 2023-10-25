@@ -1,5 +1,5 @@
 import untypedSettings from '../../config/config.json' assert { type: 'json' };
-import { getBadge } from '../mongo.js';
+import { deleteBadge, getBadge } from '../mongo.js';
 import { Config } from '../types/config.js';
 
 const settings = untypedSettings as Config;
@@ -16,10 +16,18 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
     const user = data.user;
     const badgeName = data.options.getString('name')!;
     const badge = await getBadge(user.id, badgeName);
-    if (badge === undefined) {
-        throw new Error(
-            'verification.ts: badge is undefined! Something went really wrong!',
-        );
+    if (
+        badge === undefined ||
+        badge.imageHash === null ||
+        badge.badge === null
+    ) {
+        deleteBadge(user.id, badgeName);
+        await data.channel?.send({
+            content: `Critical Error: Badge components are undefined!\n\`\`\`${JSON.stringify(
+                badge,
+            )}\`\`\`\nBadge has been deleted.\nPlease contact an admin!`,
+        });
+        return;
     }
     const badgeImgurLink = badge.badge;
 

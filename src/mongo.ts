@@ -38,7 +38,6 @@ export async function getEntry(userId: string): Promise<Entry> {
         });
         entry = (await mongo.findOne({ userId })) as Entry;
     }
-    console.log(entry);
     return entry;
 }
 
