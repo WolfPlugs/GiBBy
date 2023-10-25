@@ -38,7 +38,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
             if (interaction.options.getSubcommand() === 'delete') {
                 const name = interaction.options.getString('name')!;
-                if (await badgeExists(selectedUser.id, name, 'active')) {
+                if (await badgeExists(selectedUser.id, name, 'all')) {
                     await deleteBadge(selectedUser.id, name).then(async () => {
                         await interaction.reply({
                             content: `Deleted badge ${name} from ${selectedUser.username}`,
