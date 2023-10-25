@@ -132,10 +132,21 @@ export async function execute(
             });
             return;
         }
-        const imgurLink: false | ImgurResponse = await imgurUpload(url);
-        if (!imgurLink) {
+        const imgurLink: ImgurResponse = await imgurUpload(url);
+        if (!imgurLink.link || !imgurLink.deletehash) {
             await interaction.reply({
-                content: 'Imgur Error! Contact an admin.',
+                content: `⚠️ Halting badgeCreate: missing data in imgur reply! (Check log!)\n\n\`debug: userUrl: ${url}\``,
+            });
+            console.error(imgurLink);
+            return;
+        }
+        if (
+            imgurLink === null ||
+            imgurLink.deletehash === null ||
+            imgurLink.link === null
+        ) {
+            await interaction.reply({
+                content: `Imgur Error! Contact an admin.\n\nDebug: ${url}`,
             });
             return;
         }
