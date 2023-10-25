@@ -5,4 +5,5 @@ export interface ImgurResponse {
 
 export interface RawImgurResponse {
     data: ImgurResponse;
+    success: boolean;
 }
