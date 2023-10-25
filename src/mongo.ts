@@ -6,6 +6,7 @@ import { Entry } from './types/entry.js';
 import { GuildMember } from 'discord.js';
 import { Config } from './types/config.js';
 import type { Credentials } from './types/config.js';
+import { imgurDelete } from './lib/imgur.js';
 
 const credentials: Credentials = untypedCredentials as Credentials;
 
@@ -28,7 +29,17 @@ export async function destroy(): Promise<void> {
 }
 
 export async function getEntry(userId: string): Promise<Entry> {
-    return (await mongo.findOne({ userId })) as Entry;
+    let entry = (await mongo.findOne({ userId })) as Entry;
+    if (entry === null) {
+        await mongo.insertOne({
+            userId,
+            badges: [],
+            blocked: false,
+        });
+        entry = (await mongo.findOne({ userId })) as Entry;
+    }
+    console.log(entry);
+    return entry;
 }
 
 // GETTERS
@@ -105,6 +116,10 @@ export async function unblockUser(userId: string): Promise<void> {
 // DELETE FUNCTIONS
 
 export async function deleteBadge(userId: string, name: string): Promise<void> {
+    const badge = await getBadge(userId, name);
+    if (badge?.imageHash) {
+        await imgurDelete(badge.imageHash);
+    }
     await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 

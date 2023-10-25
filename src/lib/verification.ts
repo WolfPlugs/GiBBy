@@ -1,4 +1,5 @@
 import untypedSettings from '../../config/config.json' assert { type: 'json' };
+import { deleteBadge, getBadge } from '../mongo.js';
 import { Config } from '../types/config.js';
 
 const settings = untypedSettings as Config;
@@ -13,8 +14,14 @@ import {
 
 export async function fireVerification(data: ChatInputCommandInteraction) {
     const user = data.user;
-    const badgeURL = data.options.getString('url')!;
     const badgeName = data.options.getString('name')!;
+    let badge = await getBadge(user.id, badgeName);
+    if (badge === undefined) {
+        throw new Error(
+            'verification.ts: badge is undefined! Something went really wrong!',
+        );
+    }
+    const badgeImgurLink = badge.badge;
 
     const acceptButton = new ButtonBuilder()
         .setCustomId('verify.accept')
@@ -26,23 +33,19 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
         .setStyle(ButtonStyle.Danger)
         .setEmoji('✖️');
 
-    /*
-    We may want to embed some data into the embed somewhere... ex. user ID, badge, etc.
-    */
-
     const embed = new EmbedBuilder()
         .setAuthor({
             name: user.username,
             iconURL: user.displayAvatarURL(),
         })
-        .setImage(badgeURL)
+        .setImage(data.options.getString('url')!)
         .addFields({
             name: 'Badge Name',
             value: badgeName,
         })
         .addFields({
             name: 'URL:',
-            value: badgeURL,
+            value: badgeImgurLink,
         })
         .setTimestamp(Date.now())
         .setColor('#FFA500');

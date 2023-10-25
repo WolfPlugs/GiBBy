@@ -160,10 +160,6 @@ export async function execute(
     if (interaction.options.getSubcommand() === 'delete') {
         const name = interaction.options.getString('name')!;
         if (await badgeExists(id, name, 'active')) {
-            const badge = await getBadge(id, name);
-            if (badge?.imageHash) {
-                await imgurDelete(badge.imageHash);
-            }
             await deleteBadge(id, name).then(async () => {
                 await interaction.reply({
                     content: 'Badge deleted!',
