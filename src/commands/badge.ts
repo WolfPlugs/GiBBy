@@ -27,8 +27,6 @@ import { isAllowedDomain } from '../lib/checkDomain.js';
 import { Badge } from '../types/badge.js';
 
 import { Config } from '../types/config.js';
-import { imgurUpload } from '../lib/imgur.js';
-import { ImgurResponse } from '../types/imgur.js';
 
 const settings = untypedConfig as Config;
 
@@ -132,29 +130,10 @@ export async function execute(
             });
             return;
         }
-        const imgurLink: ImgurResponse = await imgurUpload(url);
-        if (!imgurLink.link || !imgurLink.deletehash) {
-            await interaction.reply({
-                content: `⚠️ Halting badgeCreate: missing data in imgur reply! (Check log!)\n\n\`debug: userUrl: ${url}\``,
-            });
-            console.error(imgurLink);
-            return;
-        }
-        if (
-            imgurLink === null ||
-            imgurLink.deletehash === null ||
-            imgurLink.link === null
-        ) {
-            await interaction.reply({
-                content: `Imgur Error! Contact an admin.\n\nDebug: ${url}`,
-            });
-            return;
-        }
 
         await pendBadge(id, {
             name,
-            badge: imgurLink.link,
-            imageHash: imgurLink.deletehash,
+            badge: url,
         }).then(async () => {
             await interaction.reply({
                 content: 'Badge is now pending approval!',

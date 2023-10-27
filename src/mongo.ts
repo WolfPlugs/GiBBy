@@ -6,7 +6,6 @@ import { Entry } from './types/entry.js';
 import { GuildMember } from 'discord.js';
 import { Config } from './types/config.js';
 import type { Credentials } from './types/config.js';
-import { imgurDelete } from './lib/imgur.js';
 
 const credentials: Credentials = untypedCredentials as Credentials;
 
@@ -115,10 +114,6 @@ export async function unblockUser(userId: string): Promise<void> {
 // DELETE FUNCTIONS
 
 export async function deleteBadge(userId: string, name: string): Promise<void> {
-    const badge = await getBadge(userId, name);
-    if (badge?.imageHash) {
-        await imgurDelete(badge.imageHash);
-    }
     await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 

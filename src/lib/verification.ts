@@ -15,8 +15,7 @@ import {
 export async function fireVerification(data: ChatInputCommandInteraction) {
     const user = data.user;
     const badgeName = data.options.getString('name')!;
-    const badge = await getBadge(user.id, badgeName);
-    const badgeImgurLink = badge!.badge;
+    const badgeURL = data.options.getString('url')!;
 
     const acceptButton = new ButtonBuilder()
         .setCustomId('verify.accept')
@@ -40,7 +39,7 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
         })
         .addFields({
             name: 'URL:',
-            value: badgeImgurLink,
+            value: badgeURL,
         })
         .setTimestamp(Date.now())
         .setColor('#FFA500');

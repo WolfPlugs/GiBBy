@@ -12,6 +12,4 @@ export interface Config {
 export interface Credentials {
     DiscordToken: string;
     MongoDB: string;
-    ImgurClientID: string;
-    ImgurSecret: string;
 }
