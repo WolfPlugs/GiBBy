@@ -1,5 +1,4 @@
 import untypedSettings from '../../config/config.json' assert { type: 'json' };
-import { getBadge } from '../mongo.js';
 import { Config } from '../types/config.js';
 
 const settings = untypedSettings as Config;
