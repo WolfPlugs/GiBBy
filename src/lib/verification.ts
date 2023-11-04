@@ -14,7 +14,7 @@ import {
 export async function fireVerification(data: ChatInputCommandInteraction) {
     const user = data.user;
     const badgeName = data.options.getString('name')!;
-    const badgeURL = data.options.getString('url')!;
+    const badgeData = data.options.getAttachment('image')!;
 
     const acceptButton = new ButtonBuilder()
         .setCustomId('verify.accept')
@@ -31,14 +31,15 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
             name: user.username,
             iconURL: user.displayAvatarURL(),
         })
-        .setImage(data.options.getString('url'))
+        .setImage(data.options.getAttachment('image')!.url)
         .addFields({
             name: 'Badge Name',
             value: badgeName,
         })
         .addFields({
             name: 'URL:',
-            value: badgeURL,
+            // Only to test how it would look clean on embed
+            value: badgeData.url.replace(/\.(png|gif|jpeg|jpg|bmp|webp|tiff|svg|ico).*$/, '.$1'),
         })
         .setTimestamp(Date.now())
         .setColor('#FFA500');

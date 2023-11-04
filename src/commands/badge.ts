@@ -43,10 +43,10 @@ export const data = new SlashCommandBuilder()
                     .setDescription('The name of the badge')
                     .setRequired(true),
             )
-            .addStringOption((option) =>
+            .addAttachmentOption((option) =>
                 option
-                    .setName('url')
-                    .setDescription('The image URL of the badge')
+                    .setName('image')
+                    .setDescription('Upload a image to set as a badge')
                     .setRequired(true),
             ),
     )
@@ -104,7 +104,8 @@ export async function execute(
         }
         // These WILL exist because they are required by the slash command
         const name = interaction.options.getString('name')!;
-        const url = interaction.options.getString('url')!;
+        const image = interaction.options.getAttachment('image')!;
+        // Add a Check to see if the attachment is a valid image/gif
 
         if (/<:(.*):(.*)>/.test(name)) {
             await interaction.reply({
@@ -115,14 +116,6 @@ export async function execute(
             return;
         }
 
-        if (!(await isAllowedDomain(url))) {
-            await interaction.reply({
-                content:
-                    'This is not a whitelisted domain or it is improperly formatted',
-                ephemeral: true,
-            });
-            return;
-        }
         if (await badgeExists(id, name, 'all')) {
             await interaction.reply({
                 content: 'You already have a badge with that name!',
@@ -133,7 +126,7 @@ export async function execute(
 
         await pendBadge(id, {
             name,
-            badge: url,
+            badge: image.url,
         }).then(async () => {
             await interaction.reply({
                 content: 'Badge is now pending approval!',
