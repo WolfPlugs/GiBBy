@@ -18,7 +18,7 @@
     "typescript-eslint-language-service": "^5.0.5"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.1.0",
+    "@discordjs/rest": "^2.2.0",
     "discord-api-types": "^0.37.63",
     "discord.js": "^14.14.1",
     "mongodb": "^6.2.0"
