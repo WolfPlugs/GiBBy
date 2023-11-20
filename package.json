@@ -21,7 +21,7 @@
     "@discordjs/rest": "^2.1.0",
     "discord-api-types": "^0.37.63",
     "discord.js": "^14.14.1",
-    "mongodb": "^6.2.0"
+    "mongodb": "^6.3.0"
   },
   "optionalDependencies": {
     "tsx": "^4.1.1"
