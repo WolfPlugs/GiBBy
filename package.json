@@ -1,7 +1,5 @@
 {
-  "name": "gibby",
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "dev": "tsx src/index.ts",
     "start": "node dist/src/index.js",
@@ -23,6 +21,6 @@
     "mongodb": "^6.3.0"
   },
   "optionalDependencies": {
-    "tsx": "^4.2.0"
+    "tsx": "^4.3.0"
   }
 }
