@@ -1,4 +1,4 @@
-import type { ButtonInteraction, Client } from 'discord.js';
+import type { ButtonInteraction, Client } from "discord.js";
 
 export interface Button {
     id: string;

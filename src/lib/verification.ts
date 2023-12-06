@@ -1,5 +1,5 @@
-import untypedSettings from '../../config/config.json' assert { type: 'json' };
-import { Config } from '../types/config.js';
+import untypedSettings from "../../config/config.json" assert { type: "json" };
+import { Config } from "../types/config.js";
 
 const settings = untypedSettings as Config;
 import {
@@ -9,47 +9,47 @@ import {
     ButtonBuilder,
     ButtonStyle,
     ActionRowBuilder,
-} from 'discord.js';
+} from "discord.js";
 
 export async function fireVerification(data: ChatInputCommandInteraction) {
     const user = data.user;
-    const badgeName = data.options.getString('name')!;
-    const badgeURL = data.options.getString('url')!;
+    const badgeName = data.options.getString("name")!;
+    const badgeURL = data.options.getString("url")!;
 
     const acceptButton = new ButtonBuilder()
-        .setCustomId('verify.accept')
+        .setCustomId("verify.accept")
         .setStyle(ButtonStyle.Success)
-        .setEmoji('✅');
+        .setEmoji("✅");
 
     const denyButton = new ButtonBuilder()
-        .setCustomId('verify.deny')
+        .setCustomId("verify.deny")
         .setStyle(ButtonStyle.Danger)
-        .setEmoji('✖️');
+        .setEmoji("✖️");
 
     const embed = new EmbedBuilder()
         .setAuthor({
             name: user.username,
             iconURL: user.displayAvatarURL(),
         })
-        .setImage(data.options.getString('url'))
+        .setImage(data.options.getString("url"))
         .addFields({
-            name: 'Badge Name',
+            name: "Badge Name",
             value: badgeName,
         })
         .addFields({
-            name: 'URL:',
+            name: "URL:",
             value: badgeURL,
         })
         .setTimestamp(Date.now())
-        .setColor('#FFA500');
-    if (data.options.getSubcommand() === 'create') {
+        .setColor("#FFA500");
+    if (data.options.getSubcommand() === "create") {
         embed.setTitle(`${user.username}'s Badge Request:`);
-        acceptButton.setLabel('Approve Badge Creation');
-        denyButton.setLabel('Deny Badge Creation');
+        acceptButton.setLabel("Approve Badge Creation");
+        denyButton.setLabel("Deny Badge Creation");
     } else {
         embed.setTitle(`${user.username}'s Badge Change:`);
-        acceptButton.setLabel('Approve Badge URL Change');
-        denyButton.setLabel('Deny Badge URL Change');
+        acceptButton.setLabel("Approve Badge URL Change");
+        denyButton.setLabel("Deny Badge URL Change");
     }
 
     const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(

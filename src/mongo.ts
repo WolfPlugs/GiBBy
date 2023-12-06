@@ -1,11 +1,11 @@
-import untypedSettings from '../config/config.json' assert { type: 'json' };
-import untypedCredentials from '../config/credentials.json' assert { type: 'json' };
-import { MongoClient, Collection } from 'mongodb';
-import type { Badge } from './types/badge.d.ts';
-import { Entry } from './types/entry.js';
-import { GuildMember } from 'discord.js';
-import { Config } from './types/config.js';
-import type { Credentials } from './types/config.js';
+import untypedSettings from "../config/config.json" assert { type: "json" };
+import untypedCredentials from "../config/credentials.json" assert { type: "json" };
+import { MongoClient, Collection } from "mongodb";
+import type { Badge } from "./types/badge.d.ts";
+import { Entry } from "./types/entry.js";
+import { GuildMember } from "discord.js";
+import { Config } from "./types/config.js";
+import type { Credentials } from "./types/config.js";
 
 const credentials: Credentials = untypedCredentials as Credentials;
 
@@ -43,24 +43,24 @@ export async function getEntry(userId: string): Promise<Entry> {
 // GETTERS
 
 export async function isBlocked(userId: string): Promise<boolean> {
-    return (await getEntry(userId))['blocked'];
+    return (await getEntry(userId))["blocked"];
 }
 
 export async function getBadges(
     userId: string,
-    only: 'all' | 'pending' | 'active',
+    only: "all" | "pending" | "active",
 ) {
-    const allBadges = (await getEntry(userId))['badges'];
+    const allBadges = (await getEntry(userId))["badges"];
     const returnArray: Badge[] = [];
     switch (only) {
-        case 'all':
+        case "all":
             return allBadges;
-        case 'active':
+        case "active":
             allBadges.forEach((badge) => {
                 if (!badge.pending) returnArray.push(badge);
             });
             return returnArray;
-        case 'pending':
+        case "pending":
             allBadges.forEach((badge) => {
                 if (badge.pending) returnArray.push(badge);
             });
@@ -72,7 +72,7 @@ export async function getBadge(
     userId: string,
     name: string,
 ): Promise<Badge | undefined> {
-    const foundBadge = (await getEntry(userId))['badges'].find(
+    const foundBadge = (await getEntry(userId))["badges"].find(
         (badge) => badge.name === name,
     );
     return foundBadge;
@@ -98,8 +98,8 @@ export async function approveBadge(
     name: string,
 ): Promise<void> {
     await mongo.updateOne(
-        { userId, 'badges.name': name },
-        { $set: { 'badges.$.pending': false } },
+        { userId, "badges.name": name },
+        { $set: { "badges.$.pending": false } },
     );
 }
 
@@ -122,7 +122,7 @@ export async function deleteBadge(userId: string, name: string): Promise<void> {
 export async function badgeExists(
     userId: string,
     name: string,
-    only: 'all' | 'pending' | 'active',
+    only: "all" | "pending" | "active",
 ): Promise<boolean> {
     return (await getBadges(userId, only)).some((badge) => badge.name === name);
 }

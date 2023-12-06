@@ -1,20 +1,19 @@
-import type { ButtonInteraction, Client } from 'discord.js';
-import type { Command } from '../types/command.js';
-import { Button } from '../types/button.js';
+import type { ButtonInteraction, Client } from "discord.js";
+import type { Command } from "../types/command.js";
 
-export function handleButton(
+export async function handleButton(
     interaction: ButtonInteraction,
     client: Client,
-    commands: Map<string, Command>, // TYPE THIS
-): void {
+    commands: Map<string, Command>,
+) {
     for (const command of commands) {
         const buttons = command[1]?.buttons;
         if (!buttons) continue;
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        buttons.forEach(async (button: Button) => {
-            if (button.id === interaction.customId) {
-                await button.execute(interaction, client);
+
+        for (let i = 0; i < buttons.length; ++i) {
+            if (buttons[i]?.id === interaction.customId) {
+                await buttons[i]?.execute(interaction, client);
             }
-        });
+        }
     }
 }
