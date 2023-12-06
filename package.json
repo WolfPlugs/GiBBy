@@ -1,7 +1,5 @@
 {
-  "name": "gibby",
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "dev": "tsx src/index.ts",
     "start": "node dist/src/index.js",
@@ -9,21 +7,20 @@
     "lint": "eslint -c .eslintrc.json src config/*"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0",
-    "@typescript-eslint/eslint-plugin": "^6.11.0",
-    "@typescript-eslint/parser": "^6.11.0",
-    "eslint": "^8.53.0",
+    "@types/node": "^20.10.3",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
     "eslint-plugin-json": "^3.1.0",
-    "typescript": "^5.2.2",
-    "typescript-eslint-language-service": "^5.0.5"
+    "typescript": "^5.3.2"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.1.0",
-    "discord-api-types": "^0.37.63",
+    "@discordjs/rest": "^2.2.0",
+    "discord-api-types": "^0.37.65",
     "discord.js": "^14.14.1",
-    "mongodb": "^6.2.0"
+    "mongodb": "^6.3.0"
   },
   "optionalDependencies": {
-    "tsx": "^4.1.1"
+    "tsx": "^4.6.2"
   }
 }
