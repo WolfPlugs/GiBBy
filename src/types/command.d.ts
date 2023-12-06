@@ -3,9 +3,9 @@ import type {
     ChatInputCommandInteraction,
     Client,
     SlashCommandOptionsOnlyBuilder,
-} from 'discord.js';
+} from "discord.js";
 
-import type { Button } from './button.js';
+import type { Button } from "./button.js";
 
 export interface Command {
     data: SlashCommandOptionsOnlyBuilder;

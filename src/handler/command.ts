@@ -1,5 +1,5 @@
-import type { ChatInputCommandInteraction, Client } from 'discord.js';
-import type { Command } from '../types/command.js';
+import type { ChatInputCommandInteraction, Client } from "discord.js";
+import type { Command } from "../types/command.js";
 
 export async function handleCommand(
     interaction: ChatInputCommandInteraction,
@@ -14,7 +14,7 @@ export async function handleCommand(
         console.error(error);
         await interaction.reply({
             content:
-                'There was an error while executing this command! `debug: detected in index.ts`',
+                "There was an error while executing this command! `debug: detected in index.ts`",
             ephemeral: true,
         });
     }

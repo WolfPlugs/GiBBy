@@ -1,5 +1,5 @@
-import { Config } from '../types/config.js';
-import untypedConfig from '../../config/config.json' assert { type: 'json' };
+import { Config } from "../types/config.js";
+import untypedConfig from "../../config/config.json" assert { type: "json" };
 
 const settings = untypedConfig as Config;
 

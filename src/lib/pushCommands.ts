@@ -1,15 +1,14 @@
-import { commandData } from './indexer.js';
-import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v10';
-import untypedCredentials from '../../config/credentials.json' assert { type: 'json' };
-import untypedConfig from '../../config/config.json' assert { type: 'json' };
+import { commandData } from "./indexer.js";
+import { REST, Routes } from "discord.js";
+import untypedCredentials from "../../config/credentials.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" assert { type: "json" };
 
-import { Config, Credentials } from '../types/config.js';
+import { Config, Credentials } from "../types/config.js";
 
 const settings = untypedConfig as Config;
 const credentials = untypedCredentials as Credentials;
 
-const restAPI = new REST({ version: '10' }).setToken(credentials.DiscordToken);
+const restAPI = new REST({ version: "10" }).setToken(credentials.DiscordToken);
 
 export async function pushCommands(): Promise<void> {
     try {
