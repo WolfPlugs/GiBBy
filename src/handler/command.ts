@@ -1,15 +1,12 @@
-import type { ChatInputCommandInteraction, Client } from "discord.js";
+import type { ChatInputCommandInteraction } from "discord.js";
 import type { Command } from "../types/command.js";
 
 export async function handleCommand(
     interaction: ChatInputCommandInteraction,
-    client: Client,
     commands: Map<string, Command>,
 ) {
     try {
-        await commands
-            .get(interaction.commandName)
-            ?.execute(interaction, client);
+        await commands.get(interaction.commandName)?.execute(interaction);
     } catch (error) {
         console.error(error);
         await interaction.reply({

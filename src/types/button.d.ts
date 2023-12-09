@@ -1,6 +1,6 @@
-import type { ButtonInteraction, Client } from "discord.js";
+import type { ButtonInteraction } from "discord.js";
 
 export interface Button {
     id: string;
-    execute: (interaction: ButtonInteraction, client: Client) => Promise<void>;
+    execute: (interaction: ButtonInteraction) => Promise<void>;
 }

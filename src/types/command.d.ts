@@ -1,7 +1,6 @@
 import type {
     AutocompleteInteraction,
     ChatInputCommandInteraction,
-    Client,
     SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 
@@ -9,13 +8,7 @@ import type { Button } from "./button.js";
 
 export interface Command {
     data: SlashCommandOptionsOnlyBuilder;
-    execute: (
-        interaction: ChatInputCommandInteraction,
-        client: Client,
-    ) => Promise<void>;
+    execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
     buttons?: Button[];
-    autocomplete?: (
-        interaction: AutocompleteInteraction,
-        client: Client,
-    ) => Promise<void>;
+    autocomplete?: (interaction: AutocompleteInteraction) => Promise<void>;
 }
