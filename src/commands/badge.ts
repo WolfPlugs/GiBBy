@@ -42,7 +42,7 @@ export const data = new SlashCommandBuilder()
                     .setDescription("The name of the badge")
                     .setRequired(true),
             )
-            .addStringOption((option) =>
+            .addAttachmentOption((option) =>
                 option
                     .setName("url")
                     .setDescription("The image URL of the badge")
@@ -132,7 +132,7 @@ export async function execute(
 
         await pendBadge(id, {
             name,
-            badge: url,
+            badge: image.url,
         }).then(async () => {
             await interaction.reply({
                 content: "Badge is now pending approval!",
