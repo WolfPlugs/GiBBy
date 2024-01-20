@@ -19,7 +19,7 @@ import {
     approveBadge,
     blockUser,
     unblockUser,
-} from "../mongo.js";
+} from "../lib/mongo.js";
 
 import untypedConfig from "../../config/config.json" assert { type: "json" };
 import { fireVerification } from "../lib/verification.js";
@@ -27,7 +27,7 @@ import { isAllowedDomain } from "../lib/checkDomain.js";
 import { Badge } from "../types/badge.js";
 import { Config } from "../types/config.js";
 
-const settings = untypedConfig as Config;
+const { MaxBadges, ExtraBoostBadges, VerifierRole } = untypedConfig as Config;
 
 export const data = new SlashCommandBuilder()
     .setName("badge")
@@ -92,9 +92,9 @@ export async function execute(
         if (!(await canMakeNewBadge(interaction.member as GuildMember))) {
             await interaction.reply({
                 content: `You already have ${
-                    settings.MaxBadges +
+                    MaxBadges +
                     ((interaction.member as GuildMember).premiumSince
-                        ? settings.ExtraBoostBadges
+                        ? ExtraBoostBadges
                         : 0)
                 } or more badges! (This includes pending badges!)`,
                 ephemeral: true,
@@ -212,7 +212,7 @@ export const buttons = [
         id: "verify.accept",
         execute: async (interaction: ButtonInteraction) => {
             if (interaction.inCachedGuild()) {
-                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                if (interaction.member.roles.cache.has(VerifierRole)) {
                     const newEmbed = EmbedBuilder.from(
                         interaction.message.embeds.at(0)!,
                     )
@@ -243,7 +243,7 @@ export const buttons = [
             const originalPrompter = interaction.message.mentions.users.at(0)!;
             if (interaction.inCachedGuild()) {
                 if (
-                    interaction.member.roles.cache.has(settings.VerifierRole) ||
+                    interaction.member.roles.cache.has(VerifierRole) ||
                     originalPrompter == interaction.user
                 ) {
                     const newEmbed = EmbedBuilder.from(
@@ -274,7 +274,7 @@ export const buttons = [
         id: "verify.block",
         execute: async (interaction: ButtonInteraction) => {
             if (interaction.inCachedGuild()) {
-                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                if (interaction.member.roles.cache.has(VerifierRole)) {
                     await blockUser(
                         interaction.message.mentions.users.at(0)!.id,
                     );
@@ -302,7 +302,7 @@ export const buttons = [
         id: "verify.unblock",
         execute: async (interaction: ButtonInteraction) => {
             if (interaction.inCachedGuild()) {
-                if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+                if (interaction.member.roles.cache.has(VerifierRole)) {
                     await unblockUser(
                         interaction.message.mentions.users.at(0)!.id,
                     );

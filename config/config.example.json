@@ -1,4 +1,6 @@
 {
+    "DiscordToken": "BotToken",
+    "MongoDB": "mongodb://localhost:27017",
     "ClientId": "Bot ID",
     "DatabaseName": "GlobalBadges",
     "CollectionName": "database",

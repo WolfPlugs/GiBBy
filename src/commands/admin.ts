@@ -3,10 +3,10 @@ import {
     SlashCommandBuilder,
     type AutocompleteInteraction,
 } from "discord.js";
-import { badgeExists, deleteBadge, getBadges } from "../mongo.js";
+import { badgeExists, deleteBadge, getBadges } from "../lib/mongo.js";
 import untypedConfig from "../../config/config.json" assert { type: "json" };
 import type { Config } from "../types/config.js";
-const settings = untypedConfig as Config;
+const { VerifierRole } = untypedConfig as Config;
 import type { Badge } from "../types/badge.js";
 
 export const data = new SlashCommandBuilder()
@@ -33,7 +33,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: ChatInputCommandInteraction) {
     if (interaction.inCachedGuild()) {
-        if (interaction.member.roles.cache.has(settings.VerifierRole)) {
+        if (interaction.member.roles.cache.has(VerifierRole)) {
             const selectedUser = interaction.options.getUser("user")!; // User will be defined as it is required by command
 
             if (interaction.options.getSubcommand() === "delete") {

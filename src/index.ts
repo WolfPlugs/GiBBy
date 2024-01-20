@@ -4,9 +4,10 @@ import {
     Events,
     type ChatInputCommandInteraction,
 } from "discord.js";
-import { destroy } from "./mongo.js";
-import untypedCredentials from "../config/credentials.json" assert { type: "json" };
-const credentials: Credentials = untypedCredentials as Credentials;
+import { destroy } from "./lib/mongo.js";
+import untypedConfig from "../config/config.json" assert { type: "json" };
+import type { Config } from "./types/config.js";
+const { DiscordToken } = untypedConfig as Config;
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds],
@@ -24,7 +25,7 @@ import { commands } from "./lib/indexer.js";
 import { handleCommand } from "./handler/command.js";
 import { handleButton } from "./handler/button.js";
 import { handleAutocomplete } from "./handler/autocomplete.js";
-import { Credentials } from "./types/config.js";
+
 client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         await handleCommand(
@@ -47,4 +48,4 @@ client.on(Events.Invalidated, async () => {
     process.exit(1);
 });
 
-await client.login(credentials.DiscordToken);
+await client.login(DiscordToken);
