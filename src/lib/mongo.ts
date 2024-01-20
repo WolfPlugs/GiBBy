@@ -1,23 +1,19 @@
-import untypedSettings from "../config/config.json" assert { type: "json" };
-import untypedCredentials from "../config/credentials.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" assert { type: "json" };
 import { MongoClient, Collection } from "mongodb";
-import type { Badge } from "./types/badge.d.ts";
-import { Entry } from "./types/entry.js";
+import type { Badge } from "../types/badge";
+import { Entry } from "../types/entry.js";
 import { GuildMember } from "discord.js";
-import { Config } from "./types/config.js";
-import type { Credentials } from "./types/config.js";
+import { Config } from "../types/config.js";
 
-const credentials: Credentials = untypedCredentials as Credentials;
+const { CollectionName, DatabaseName, MongoDB, MaxBadges, ExtraBoostBadges} = untypedConfig as Config;
 
-const settings = untypedSettings as Config;
-
-const client = new MongoClient(credentials.MongoDB);
+const client = new MongoClient(MongoDB);
 
 async function connect(): Promise<Collection> {
     await client.connect();
     const collection: Collection = client
-        .db(settings.DatabaseName)
-        .collection(settings.CollectionName);
+        .db(DatabaseName)
+        .collection(CollectionName);
     return collection;
 }
 
@@ -82,7 +78,7 @@ export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
     const entry = await getEntry(user.id);
     return !(
         entry.badges.length >=
-        settings.MaxBadges + (user.premiumSince ? settings.ExtraBoostBadges : 0)
+        MaxBadges + (user.premiumSince ? ExtraBoostBadges : 0)
     );
 }
 

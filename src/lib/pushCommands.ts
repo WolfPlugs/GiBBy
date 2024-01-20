@@ -1,19 +1,17 @@
 import { commandData } from "./indexer.js";
 import { REST, Routes } from "discord.js";
-import untypedCredentials from "../../config/credentials.json" assert { type: "json" };
 import untypedConfig from "../../config/config.json" assert { type: "json" };
 
-import { Config, Credentials } from "../types/config.js";
+import type { Config } from "../types/config.js";
 
-const settings = untypedConfig as Config;
-const credentials = untypedCredentials as Credentials;
+const { DiscordToken, ClientId } = untypedConfig as Config;
 
-const restAPI = new REST({ version: "10" }).setToken(credentials.DiscordToken);
+const restAPI = new REST({ version: "10" }).setToken(DiscordToken);
 
 export async function pushCommands(): Promise<void> {
     try {
         console.log(`Pushing ${commandData.length} commands...`);
-        await restAPI.put(Routes.applicationCommands(settings.ClientId), {
+        await restAPI.put(Routes.applicationCommands(ClientId), {
             body: commandData,
         });
     } catch (error) {

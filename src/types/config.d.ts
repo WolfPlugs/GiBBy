@@ -1,4 +1,6 @@
 export interface Config {
+    DiscordToken: string;
+    MongoDB: string;
     ClientId: string;
     DatabaseName: string;
     CollectionName: string;
@@ -7,9 +9,4 @@ export interface Config {
     PromptChannel: string;
     VerifierRole: string;
     Domains: string[];
-}
-
-export interface Credentials {
-    DiscordToken: string;
-    MongoDB: string;
 }
