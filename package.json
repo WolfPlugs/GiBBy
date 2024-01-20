@@ -7,12 +7,11 @@
     "lint": "eslint -c .eslintrc.json src config/*"
   },
   "devDependencies": {
-    "@types/node": "^20.10.3",
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
-    "@typescript-eslint/parser": "^6.13.2",
-    "eslint": "^8.55.0",
-    "eslint-plugin-json": "^3.1.0",
-    "typescript": "^5.3.2"
+    "@types/node": "^20.11.4",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@discordjs/rest": "^2.2.0",
@@ -20,6 +19,6 @@
     "mongodb": "^6.3.0"
   },
   "optionalDependencies": {
-    "tsx": "^4.6.2"
+    "tsx": "^4.7.0"
   }
 }

@@ -29,13 +29,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.isCommand()) {
         await handleCommand(
             interaction as ChatInputCommandInteraction,
-            client,
             commands,
         );
     } else if (interaction.isButton()) {
-        await handleButton(interaction, client, commands);
+        await handleButton(interaction, commands);
     } else if (interaction.isAutocomplete()) {
-        await handleAutocomplete(interaction, client, commands);
+        await handleAutocomplete(interaction, commands);
     }
 });
 

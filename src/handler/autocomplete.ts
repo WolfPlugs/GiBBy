@@ -1,9 +1,8 @@
-import type { AutocompleteInteraction, Client } from "discord.js";
+import type { AutocompleteInteraction } from "discord.js";
 import { Command } from "../types/command.js";
 
 export async function handleAutocomplete(
     interaction: AutocompleteInteraction,
-    client: Client,
     commands: Map<string, Command>,
 ) {
     const command = commands.get(interaction.commandName) as Command;
@@ -13,7 +12,7 @@ export async function handleAutocomplete(
         );
     } else if (command.autocomplete) {
         try {
-            await command.autocomplete(interaction, client);
+            await command.autocomplete(interaction);
         } catch (error) {
             console.error(error);
         }
