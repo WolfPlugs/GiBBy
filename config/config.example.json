@@ -1,8 +1,8 @@
 {
     "DiscordToken": "BotToken",
     "MongoDB": "mongodb://localhost:27017",
-    "ClientId": "Bot ID",
-    "DatabaseName": "GlobalBadges",
+    "ClientID": "Bot ID",
+    "DatabaseName": "wehDB",
     "CollectionName": "database",
     "MaxBadges": 5,
     "ExtraBoostBadges": 5,
@@ -12,5 +12,12 @@
         "media.discordapp.net",
         "cdn.discordapp.com",
         "tenor.com"
-    ]
+    ],
+    "BucketEndpoint": "weh.r2.dev",
+    "BucketPort": 443,
+    "BucketSSL": true,
+    "BucketAccessKey": "SuperCoolKey",
+    "BucketSecretKey": "SuperSecretKey",
+    "BucketName": "WehBucket",
+    "BucketDomain": "https://bucket.weh.com"
 }

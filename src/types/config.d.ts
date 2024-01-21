@@ -1,7 +1,7 @@
 export interface Config {
     DiscordToken: string;
     MongoDB: string;
-    ClientId: string;
+    ClientID: string;
     DatabaseName: string;
     CollectionName: string;
     MaxBadges: number;
@@ -9,4 +9,11 @@ export interface Config {
     PromptChannel: string;
     VerifierRole: string;
     Domains: string[];
+    BucketEndpoint: string;
+    BucketPort: number;
+    BucketSSL: boolean
+    BucketAccessKey: string;
+    BucketSecretKey: string;
+    BucketName: string;
+    BucketDomain: string;
 }
