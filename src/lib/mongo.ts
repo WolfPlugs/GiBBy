@@ -6,7 +6,7 @@ import { GuildMember } from "discord.js";
 import { Config } from "../types/config.js";
 import { BucketDelete, BucketUpload } from "./bucket.js";
 
-const { CollectionName, DatabaseName, MongoDB, MaxBadges, ExtraBoostBadges} = untypedConfig as Config;
+const { CollectionName, DatabaseName, MongoDB, MaxBadges, ExtraBoostBadges, BucketDomain } = untypedConfig as Config;
 
 const client = new MongoClient(MongoDB);
 
@@ -123,7 +123,9 @@ export async function deleteBadge(userId: string, name: string): Promise<void> {
     if(!badge){
         throw new Error("Badge does not exist")
     }
-    await BucketDelete(badge.badge)
+    if(badge.badge.includes(BucketDomain)){ // Badges that have not been approved will not be in the bucket
+        await BucketDelete(badge.badge)
+    }
     await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 
