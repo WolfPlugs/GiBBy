@@ -4,6 +4,7 @@ import type { Badge } from "../types/badge";
 import { Entry } from "../types/entry.js";
 import { GuildMember } from "discord.js";
 import { Config } from "../types/config.js";
+import { BucketDelete, BucketUpload } from "./bucket";
 
 const { CollectionName, DatabaseName, MongoDB, MaxBadges, ExtraBoostBadges} = untypedConfig as Config;
 
@@ -93,9 +94,17 @@ export async function approveBadge(
     userId: string,
     name: string,
 ): Promise<void> {
+    const badge = await getBadge(userId,name)
+    if(!badge){
+        throw new Error("Badge is not pending")
+    }
+    const s3Url = await BucketUpload(badge.badge)
+    if(!s3Url){
+        throw new Error("S3 upload failed")
+    }
     await mongo.updateOne(
         { userId, "badges.name": name },
-        { $set: { "badges.$.pending": false } },
+        { $set: { "badges.$.pending": false, "badges.$.badge": s3Url } },
     );
 }
 
@@ -110,6 +119,11 @@ export async function unblockUser(userId: string): Promise<void> {
 // DELETE FUNCTIONS
 
 export async function deleteBadge(userId: string, name: string): Promise<void> {
+    const badge = await getBadge(userId,name)
+    if(!badge){
+        throw new Error("Badge does not exist")
+    }
+    await BucketDelete(badge.badge)
     await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 

@@ -3,7 +3,7 @@ import type { Badge } from "./badge.d.ts";
 
 export interface Entry {
     _id?: ObjectId;
-    userID: string;
+    userId: string;
     badges: Badge[];
     blocked: boolean;
 }
