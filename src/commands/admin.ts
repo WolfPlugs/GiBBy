@@ -41,12 +41,12 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 if (await badgeExists(selectedUser.id, name, "all")) {
                     await deleteBadge(selectedUser.id, name).then(async () => {
                         await interaction.reply({
-                            content: `Deleted badge ${name} from ${selectedUser.username}`,
+                            content: `Deleted badge "${name}" from ${selectedUser.username}`,
                             ephemeral: true,
                         });
                         try {
                             return await selectedUser.send({
-                                content: `Your badge ${name} has been deleted by an admin.`,
+                                content: `Your badge "${name}" has been deleted by an admin.`,
                             });
                         } catch (e) {
                             return;
