@@ -19,7 +19,6 @@
     - `ExtraBoostBadges`: The amount of badges added to booster's allowance (default: `5`)
     - `PromptChannel`: The channel to send the badge requests to
     - `VerifierRole`: The role ID of people who can approve requests
-    - `Domains`: An array of whitelisted domains for badges
     - `BucketEndpoint`: The URL to upload to the bucket
     - `BucketPort`: The port to upload to the bucket. (default: `443`)
     - `BucketAccessKey`: The bucket's access key

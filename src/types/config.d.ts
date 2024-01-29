@@ -8,7 +8,6 @@ export interface Config {
     ExtraBoostBadges: number;
     PromptChannel: string;
     VerifierRole: string;
-    Domains: string[];
     BucketEndpoint: string;
     BucketPort: number;
     BucketSSL: boolean

@@ -24,7 +24,7 @@ export async function destroy(): Promise<void> {
     await client.close();
 }
 
-export async function getEntry(userId: string): Promise<Entry> {
+async function getEntry(userId: string): Promise<Entry> {
     let entry = (await mongo.findOne({ userId })) as Entry;
     if (entry === null) {
         await mongo.insertOne({

@@ -8,11 +8,6 @@
     "ExtraBoostBadges": 5,
     "PromptChannel": "ChannelID",
     "VerifierRole": "554356800",
-    "Domains": [
-        "media.discordapp.net",
-        "cdn.discordapp.com",
-        "tenor.com"
-    ],
     "BucketEndpoint": "weh.r2.dev",
     "BucketPort": 443,
     "BucketSSL": true,

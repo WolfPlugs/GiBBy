@@ -23,7 +23,6 @@ import {
 
 import untypedConfig from "../../config/config.json" assert { type: "json" };
 import { fireVerification } from "../lib/verification.js";
-import { isAllowedDomain } from "../lib/checkDomain.js";
 import { Badge } from "../types/badge.js";
 import { Config } from "../types/config.js";
 
@@ -42,10 +41,10 @@ export const data = new SlashCommandBuilder()
                     .setDescription("The name of the badge")
                     .setRequired(true),
             )
-            .addStringOption((option) =>
+            .addAttachmentOption((option) =>
                 option
-                    .setName("url")
-                    .setDescription("The image URL of the badge")
+                    .setName("image")
+                    .setDescription("The image/gif for the badge")
                     .setRequired(true),
             ),
     )
@@ -103,21 +102,12 @@ export async function execute(
         }
         // These WILL exist because they are required by the slash command
         const name = interaction.options.getString("name")!;
-        const url = interaction.options.getString("url")!;
+        const image = interaction.options.getAttachment("image")!;
 
         if (/<:(.*):(.*)>/.test(name)) {
             await interaction.reply({
                 content:
                     "Custom emojis will not appear in the badge name, and are thus blocked.",
-                ephemeral: true,
-            });
-            return;
-        }
-
-        if (!(await isAllowedDomain(url))) {
-            await interaction.reply({
-                content:
-                    "This is not a whitelisted domain or it is improperly formatted",
                 ephemeral: true,
             });
             return;
@@ -132,12 +122,12 @@ export async function execute(
 
         await pendBadge(id, {
             name,
-            badge: url,
+            badge: image.url,
         }).then(async () => {
-            await interaction.reply({
-                content: "Badge is now pending approval!",
-                ephemeral: true,
-            });
+            // await interaction.reply({
+            //     content: "Badge is now pending approval!",
+            //     ephemeral: true,
+            // });
             await fireVerification(interaction);
         });
         return;
@@ -162,6 +152,7 @@ export async function execute(
         });
         return;
     }
+
     //SECTION - LIST BADGES
 
     if (interaction.options.getSubcommand() === "list") {
