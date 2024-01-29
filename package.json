@@ -4,7 +4,7 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/src/index.js",
     "build": "tsc",
-    "lint": "eslint -c .eslintrc.json \"**/*.{ts}\""
+    "lint": "eslint -c .eslintrc.json \"**/*.ts\""
   },
   "devDependencies": {
     "@types/node": "^20.11.10",
