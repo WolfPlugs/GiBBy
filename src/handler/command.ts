@@ -7,11 +7,10 @@ export async function handleCommand(
 ) {
     try {
         await commands.get(interaction.commandName)?.execute(interaction);
-    } catch (error) {
+    } catch (error:unknown) {
         console.error(error);
         await interaction.reply({
-            content:
-                "There was an error while executing this command! `debug: detected in index.ts`",
+            content: `There was an error while executing this command! Debug: \`${(error as Error).message}\``,
             ephemeral: true,
         });
     }
