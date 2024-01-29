@@ -4,7 +4,7 @@ import type { Badge } from "../types/badge";
 import { Entry } from "../types/entry.js";
 import { GuildMember } from "discord.js";
 import { Config } from "../types/config.js";
-import { BucketDelete, BucketUpload } from "./bucket";
+import { BucketDelete, BucketUpload } from "./bucket.js";
 
 const { CollectionName, DatabaseName, MongoDB, MaxBadges, ExtraBoostBadges} = untypedConfig as Config;
 
