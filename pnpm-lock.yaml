@@ -15,8 +15,8 @@ dependencies:
     specifier: ^7.1.3
     version: 7.1.3
   mongodb:
-    specifier: ^6.4.0
-    version: 6.4.0
+    specifier: ^6.3.0
+    version: 6.3.0
 
 optionalDependencies:
   tsx:
@@ -1397,8 +1397,8 @@ packages:
       whatwg-url: 13.0.0
     dev: false
 
-  /mongodb@6.4.0:
-    resolution: {integrity: sha512-MdFHsyb1a/Ee0H3NmzWTSLqchacDV/APF0H6BNQvraWrOiIocys2EmTFZPgHxWhcfO94c1F34I9MACU7x0hHKA==}
+  /mongodb@6.3.0:
+    resolution: {integrity: sha512-tt0KuGjGtLUhLoU263+xvQmPHEGTw5LbcNC73EoFRYgSHwZt5tsoJC110hDyO1kjQzpgNrpdcSza9PknWN4LrA==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
