@@ -87,6 +87,7 @@ export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
 
 export async function pendBadge(userId: string, badge: Badge): Promise<void> {
     badge.pending = true;
+    // @ts-expect-error - Possibly https://jira.mongodb.org/browse/NODE-5995
     await mongo.updateOne({ userId }, { $push: { badges: badge } });
 }
 
@@ -126,6 +127,7 @@ export async function deleteBadge(userId: string, name: string): Promise<void> {
     if(badge.badge.includes(BucketDomain)){ // Badges that have not been approved will not be in the bucket
         await BucketDelete(badge.badge)
     }
+    // @ts-expect-error - Possibly https://jira.mongodb.org/browse/NODE-5995
     await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 
