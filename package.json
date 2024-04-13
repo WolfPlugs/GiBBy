@@ -4,14 +4,15 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/src/index.js",
     "build": "tsc",
-    "lint": "eslint -c .eslintrc.json \"**/*.ts\""
+    "lint": "eslint \"**/*.ts\" ."
   },
   "devDependencies": {
-    "@types/node": "^20.12.2",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.3"
+    "@eslint/js": "^9.0.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^20.12.7",
+    "eslint": "^9.0.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.6.0"
   },
   "dependencies": {
     "@discordjs/rest": "^2.2.0",
@@ -20,6 +21,6 @@
     "mongodb": "^6.5.0"
   },
   "optionalDependencies": {
-    "tsx": "^4.7.1"
+    "tsx": "^4.7.2"
   }
 }
