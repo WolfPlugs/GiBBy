@@ -1,7 +1,7 @@
 import { Client } from "minio";
 import { createHash } from "crypto";
 
-import untypedConfig from "../../config/config.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" with { type: "json" };
 import { Config } from "../types/config.js";
 
 const { BucketEndpoint, BucketPort, BucketAccessKey, BucketSecretKey, BucketSSL, BucketDomain, BucketName } = untypedConfig as Config;

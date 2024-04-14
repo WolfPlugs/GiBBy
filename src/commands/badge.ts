@@ -21,7 +21,7 @@ import {
     unblockUser,
 } from "../lib/mongo.js";
 
-import untypedConfig from "../../config/config.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" with { type: "json" };
 import { fireVerification } from "../lib/verification.js";
 import { isAllowedDomain } from "../lib/checkDomain.js";
 import { Badge } from "../types/badge.js";

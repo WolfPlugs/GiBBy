@@ -1,6 +1,6 @@
 import { commandData } from "./indexer.js";
 import { REST, Routes } from "discord.js";
-import untypedConfig from "../../config/config.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" with { type: "json" };
 
 import type { Config } from "../types/config.js";
 

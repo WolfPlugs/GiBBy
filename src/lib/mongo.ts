@@ -1,4 +1,4 @@
-import untypedConfig from "../../config/config.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" with { type: "json" };
 import { MongoClient, Collection } from "mongodb";
 import type { Badge } from "../types/badge";
 import { Entry } from "../types/entry.js";

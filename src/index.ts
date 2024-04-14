@@ -5,7 +5,7 @@ import {
     type ChatInputCommandInteraction,
 } from "discord.js";
 import { destroy } from "./lib/mongo.js";
-import untypedConfig from "../config/config.json" assert { type: "json" };
+import untypedConfig from "../config/config.json" with { type: "json" };
 import type { Config } from "./types/config.js";
 const { DiscordToken } = untypedConfig as Config;
 

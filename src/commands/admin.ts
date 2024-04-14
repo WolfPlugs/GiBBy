@@ -4,7 +4,7 @@ import {
     type AutocompleteInteraction,
 } from "discord.js";
 import { badgeExists, deleteBadge, getBadges } from "../lib/mongo.js";
-import untypedConfig from "../../config/config.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" with { type: "json" };
 import type { Config } from "../types/config.js";
 const { VerifierRole } = untypedConfig as Config;
 import type { Badge } from "../types/badge.js";

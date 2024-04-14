@@ -1,5 +1,5 @@
 import { Config } from "../types/config.js";
-import untypedConfig from "../../config/config.json" assert { type: "json" };
+import untypedConfig from "../../config/config.json" with { type: "json" };
 
 const { Domains } = untypedConfig as Config;
 
