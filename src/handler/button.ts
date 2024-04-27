@@ -6,7 +6,7 @@ export async function handleButton(
     commands: Map<string, Command>,
 ) {
     for (const command of commands) {
-        const buttons = command[1]?.buttons;
+        const buttons = command[1].buttons;
         if (!buttons) continue;
 
         for (let i = 0; i < buttons.length; ++i) {

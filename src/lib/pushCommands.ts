@@ -10,7 +10,7 @@ const restAPI = new REST({ version: "10" }).setToken(DiscordToken);
 
 export async function pushCommands(): Promise<void> {
     try {
-        console.log(`Pushing ${commandData.length} commands...`);
+        console.log(`Pushing ${commandData.length.toString()} commands...`);
         await restAPI.put(Routes.applicationCommands(ClientID), {
             body: commandData,
         });

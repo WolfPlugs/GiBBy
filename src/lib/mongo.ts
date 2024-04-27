@@ -26,6 +26,8 @@ export async function destroy(): Promise<void> {
 
 export async function getEntry(userId: string): Promise<Entry> {
     let entry = (await mongo.findOne({ userId })) as Entry;
+    // I don't remember the exact logic here and don't really wanna rework it
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (entry === null) {
         await mongo.insertOne({
             userId,
@@ -40,14 +42,14 @@ export async function getEntry(userId: string): Promise<Entry> {
 // GETTERS
 
 export async function isBlocked(userId: string): Promise<boolean> {
-    return (await getEntry(userId))["blocked"];
+    return (await getEntry(userId)).blocked;
 }
 
 export async function getBadges(
     userId: string,
     only: "all" | "pending" | "active",
 ) {
-    const allBadges = (await getEntry(userId))["badges"];
+    const allBadges = (await getEntry(userId)).badges;
     const returnArray: Badge[] = [];
     switch (only) {
         case "all":
@@ -69,7 +71,7 @@ export async function getBadge(
     userId: string,
     name: string,
 ): Promise<Badge | undefined> {
-    const foundBadge = (await getEntry(userId))["badges"].find(
+    const foundBadge = (await getEntry(userId)).badges.find(
         (badge) => badge.name === name,
     );
     return foundBadge;

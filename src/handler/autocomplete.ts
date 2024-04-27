@@ -5,7 +5,7 @@ export async function handleAutocomplete(
     interaction: AutocompleteInteraction,
     commands: Map<string, Command>,
 ) {
-    const command = commands.get(interaction.commandName) as Command;
+    const command = commands.get(interaction.commandName);
     if (!command) {
         console.error(
             `[Autocomplete Handler]: Command ${interaction.commandName} not found`,

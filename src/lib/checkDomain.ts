@@ -10,7 +10,7 @@ export async function isAllowedDomain(domain: string): Promise<boolean> {
             .then((r) => {
                 out = r.ok;
             })
-            .catch((e) => {
+            .catch((e:unknown) => {
                 console.log(e);
                 out = false;
             });

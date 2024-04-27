@@ -3,7 +3,7 @@ import type { Command } from "../types/command.d.ts";
 import { readdirSync } from "fs";
 const commandFiles = readdirSync("./src/commands");
 export const commandData: SlashCommandOptionsOnlyBuilder[] = [];
-export const commands: Map<string, Command> = new Map();
+export const commands = new Map<string, Command>();
 
 export async function indexCommands() {
     for (const file of commandFiles) {

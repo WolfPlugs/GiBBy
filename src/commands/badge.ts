@@ -92,10 +92,10 @@ export async function execute(
         if (!(await canMakeNewBadge(interaction.member as GuildMember))) {
             await interaction.reply({
                 content: `You already have ${
-                    MaxBadges +
+                    MaxBadges.toString() +
                     ((interaction.member as GuildMember).premiumSince
                         ? ExtraBoostBadges
-                        : 0)
+                        : 0).toString()
                 } or more badges! (This includes pending badges!)`,
                 ephemeral: true,
             });
@@ -172,7 +172,7 @@ export async function execute(
         const badges = await getBadges(user.id, "all");
         const returnEmbed = new EmbedBuilder()
             .setTitle(`${user.username}'s Badge Overview`)
-            .setDescription(`${user.username} has ${badges.length} badges`)
+            .setDescription(`${user.username} has ${badges.length.toString()} badges`)
             .setColor("#FF0000");
 
         for (const badge of badges) {
