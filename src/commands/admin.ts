@@ -3,12 +3,11 @@ import {
     SlashCommandBuilder,
     type AutocompleteInteraction,
 } from "discord.js";
-import { badgeExists, deleteBadge, getBadges, pendBadge } from "../lib/mongo.js";
+import { badgeExists, deleteBadge, getBadges } from "../lib/mongo.js";
 import untypedConfig from "../../config/config.json" with { type: "json" };
 import type { Config } from "../types/config.js";
 const { VerifierRole } = untypedConfig as Config;
 import type { Badge } from "../types/badge.js";
-import { fireVerification } from "../lib/verification.js";
 
 export const data = new SlashCommandBuilder()
     .setName("admin")
@@ -30,29 +29,6 @@ export const data = new SlashCommandBuilder()
                     .setRequired(true)
                     .setAutocomplete(true),
             ),
-    )
-    .addSubcommand((subcommand) =>
-        subcommand
-            .setName("force-add")
-            .setDescription("Add a badge to the user without the user's permission")
-            .addMentionableOption((option)=>
-                option
-                    .setName("user")
-                    .setDescription("User to add badge to")
-                    .setRequired(true)
-            )
-            .addStringOption((option)=>
-                option
-                    .setName("name")
-                    .setDescription("The name of the badge")
-                    .setRequired(true)
-            )
-            .addStringOption((option)=>
-                option
-                    .setName("url")
-                    .setDescription("The image URL of the badge")
-                    .setRequired(true)
-            )
     )
 
 export async function execute(interaction: ChatInputCommandInteraction) {
@@ -76,28 +52,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                         }
                     });
                 }
-            } else if (interaction.options.getSubcommand()==="force-add"){
-                const name = interaction.options.getString("name")!;
-                const user = interaction.options.getUser("user")!;
-                const url = interaction.options.getString("url")!
-                if (await badgeExists(user.id, name, "all")) {
-                    await interaction.reply({
-                        content: "User already has a badge with that name",
-                        ephemeral: true,
-                    });
-                    return;
-                }
-                await pendBadge(user.id, {
-                    name,
-                    badge: url,
-                }).then(async () => {
-                    await interaction.reply({
-                        content: "Badge is now pending approval!",
-                        ephemeral: true,
-                    });
-                    await fireVerification(interaction);
-                });
-                return;
             }
         } else {
             await interaction.reply({
