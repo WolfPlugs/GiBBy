@@ -21,6 +21,6 @@
     "mongodb": "^6.6.1"
   },
   "optionalDependencies": {
-    "tsx": "^4.9.3"
+    "tsx": "^4.10.2"
   }
 }
