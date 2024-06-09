@@ -48,6 +48,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                                 content: `Your badge "${name}" has been deleted by an admin.`,
                             });
                         } catch (e) {
+                            console.error(e)
                             return;
                         }
                     });

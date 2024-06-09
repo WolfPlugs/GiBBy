@@ -20,8 +20,8 @@
         "useUnknownInCatchVariables": true,
         "outDir": "dist",
         "target": "ESNext",
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "types": [
             "node"
         ],

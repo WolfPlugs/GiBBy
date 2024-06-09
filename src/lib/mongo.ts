@@ -1,6 +1,6 @@
 import untypedConfig from "../../config/config.json" with { type: "json" };
 import { MongoClient, Collection } from "mongodb";
-import type { Badge } from "../types/badge";
+import type { Badge } from "../types/badge.d.js";
 import { Entry } from "../types/entry.js";
 import { GuildMember } from "discord.js";
 import { Config } from "../types/config.js";
