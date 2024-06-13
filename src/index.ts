@@ -27,18 +27,16 @@ import { handleButton } from "./handler/button.js";
 import { handleAutocomplete } from "./handler/autocomplete.js";
 
 client.on(Events.InteractionCreate, (interaction) => {
-    (async ()=> {
         if (interaction.isCommand()) {
-            await handleCommand(
+            void handleCommand(
                 interaction as ChatInputCommandInteraction,
                 commands,
             );
         } else if (interaction.isButton()) {
-            await handleButton(interaction, commands);
+            void handleButton(interaction, commands);
         } else if (interaction.isAutocomplete()) {
-            await handleAutocomplete(interaction, commands);
+            void handleAutocomplete(interaction, commands);
         }
-    })
 });
 
 client.on(Events.Error, (error) => {console.error(error)});

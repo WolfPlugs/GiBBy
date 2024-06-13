@@ -9,9 +9,14 @@ export async function handleCommand(
         await commands.get(interaction.commandName)?.execute(interaction);
     } catch (error:unknown) {
         console.error(error);
-        await interaction.reply({
-            content: `There was an error while executing this command! Debug: \`${(error as Error).message}\``,
-            ephemeral: true,
-        });
+        try {
+            await interaction.reply({
+                content: `There was an error while executing this command! Debug: \`${(error as Error).message}\``,
+                ephemeral: true,
+            });
+        } catch (e){
+        console.error("Caught error executing command, but it was already replied to!")
+        console.error(error)
+        }
     }
 }
