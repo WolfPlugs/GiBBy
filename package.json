@@ -21,7 +21,7 @@
         "mongodb": "^6.7.0"
     },
     "optionalDependencies": {
-        "tsx": "^4.15.4"
+        "tsx": "^4.16.0"
     },
     "packageManager": "pnpm@9.1.4"
 }
