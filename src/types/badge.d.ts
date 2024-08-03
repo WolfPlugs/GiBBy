@@ -1,5 +1,5 @@
 export interface Badge {
-    name: string;
-    badge: string;
-    pending?: boolean;
+	name: string;
+	badge: string;
+	pending?: boolean;
 }
