@@ -24,7 +24,8 @@ import {
 import { fireVerification } from "../lib/verification.js";
 import { Badge } from "../types/badge.js";
 
-import { blacklistedKeys } from "../main.js";
+const blacklistedKeys =
+	process.env["BLACKLISTED_WORDS"]!.toLocaleLowerCase().split(",");
 
 export const data = new SlashCommandBuilder()
 	.setName("badge")

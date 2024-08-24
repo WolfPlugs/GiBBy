@@ -27,6 +27,7 @@
     - `BUCKET_SECRET_KEY`: The bucket's secret key
     - `BUCKET_NAME`: The bucket's name
     - `BUCKET_DOMAIN`: The bucket's public facing URL. (default: `https://s3.example.com`)
+    - `BLACKLISTED_WORDS`: List of strings the badge name cannot contain
 5. Install packages using a node package manager (I suggest [PNPM](https://pnpm.io/)): `pnpm i`
 6. Build: `pnpm build`
 7. Run: `pnpm start`

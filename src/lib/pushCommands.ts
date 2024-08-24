@@ -1,9 +1,7 @@
 import { commandData } from "./indexer.js";
 import { REST, Routes } from "discord.js";
 
-const restAPI = new REST({ version: "10" }).setToken(
-	process.env["DISCORD_TOKEN"]!,
-);
+const restAPI = new REST().setToken(process.env["DISCORD_TOKEN"]!);
 
 export async function pushCommands(): Promise<void> {
 	try {

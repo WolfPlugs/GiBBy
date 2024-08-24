@@ -23,9 +23,6 @@ import { handleCommand } from "./handler/command.js";
 import { handleButton } from "./handler/button.js";
 import { handleAutocomplete } from "./handler/autocomplete.js";
 
-export const blacklistedKeys =
-	process.env["BLACKLISTED_WORDS"]!.toLocaleLowerCase().split(",");
-
 client.on(Events.InteractionCreate, (interaction) => {
 	if (interaction.isCommand()) {
 		void handleCommand(
