@@ -24,6 +24,8 @@ import {
 import { fireVerification } from "../lib/verification.js";
 import { Badge } from "../types/badge.js";
 
+import { blacklistedKeys } from "../main.js";
+
 export const data = new SlashCommandBuilder()
 	.setName("badge")
 	.setDescription("Manage your badges")
@@ -99,6 +101,14 @@ export async function execute(
 		// These WILL exist because they are required by the slash command
 		const name = interaction.options.getString("name")!;
 		const image = interaction.options.getAttachment("image")!;
+
+		if (blacklistedKeys.some((word) => name.includes(word))) {
+			await interaction.reply({
+				content: `You can't use that name.`,
+				ephemeral: true,
+			});
+			return;
+		}
 
 		if (image.size > Number(process.env["MAX_BADGE_SIZE"])) {
 			await interaction.reply({
