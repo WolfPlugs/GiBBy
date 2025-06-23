@@ -1,14 +1,14 @@
-import { MongoClient, Collection } from "mongodb";
+import type { GuildMember } from "discord.js";
+import { type Collection, MongoClient } from "mongodb";
 import type { Badge } from "../types/badge.d.js";
-import { Entry } from "../types/entry.js";
-import { GuildMember } from "discord.js";
+import type { Entry } from "../types/entry.js";
 import { BucketDelete, BucketUpload } from "./bucket.js";
 
 const client = new MongoClient(process.env["MONGO_DB"]!);
 
-async function connect(): Promise<Collection> {
+async function connect(): Promise<Collection<Entry>> {
 	await client.connect();
-	const collection: Collection = client
+	const collection: Collection<Entry> = client
 		.db(process.env["DATABASE_NAME"])
 		.collection(process.env["COLLECTION_NAME"]!);
 	return collection;
@@ -21,18 +21,17 @@ export async function destroy(): Promise<void> {
 }
 
 async function getEntry(userId: string): Promise<Entry> {
-	let entry = (await mongo.findOne({ userId })) as Entry;
-	// I don't remember the exact logic here and don't really wanna rework it
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-	if (entry === null) {
-		await mongo.insertOne({
-			userId,
-			badges: [],
-			blocked: false,
-		});
-		entry = (await mongo.findOne({ userId })) as Entry;
+	const entry = await mongo.findOne({ userId });
+	if (entry != null) {
+		return entry;
 	}
-	return entry;
+	const newEntry: Entry = {
+		userId,
+		badges: [],
+		blocked: false,
+	};
+	await mongo.insertOne(newEntry);
+	return newEntry;
 }
 
 // GETTERS
@@ -86,7 +85,6 @@ export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
 
 export async function pendBadge(userId: string, badge: Badge): Promise<void> {
 	badge.pending = true;
-	// @ts-expect-error - Possibly https://jira.mongodb.org/browse/NODE-5995
 	await mongo.updateOne({ userId }, { $push: { badges: badge } });
 }
 
@@ -127,7 +125,6 @@ export async function deleteBadge(userId: string, name: string): Promise<void> {
 		// Badges that have not been approved will not be in the bucket
 		await BucketDelete(badge.badge);
 	}
-	// @ts-expect-error - Possibly https://jira.mongodb.org/browse/NODE-5995
 	await mongo.updateOne({ userId }, { $pull: { badges: { name } } });
 }
 

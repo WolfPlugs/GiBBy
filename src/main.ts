@@ -1,8 +1,8 @@
 import {
-	Client,
-	GatewayIntentBits,
-	Events,
 	type ChatInputCommandInteraction,
+	Client,
+	Events,
+	GatewayIntentBits,
 } from "discord.js";
 import { destroy } from "./lib/mongo.js";
 
@@ -15,20 +15,21 @@ client.once(Events.ClientReady, () => {
 });
 
 import { indexCommands } from "./lib/indexer.js";
+
 await indexCommands();
+
 import { pushCommands } from "./lib/pushCommands.js";
+
 await pushCommands();
-import { commands } from "./lib/indexer.js";
-import { handleCommand } from "./handler/command.js";
-import { handleButton } from "./handler/button.js";
+
 import { handleAutocomplete } from "./handler/autocomplete.js";
+import { handleButton } from "./handler/button.js";
+import { handleCommand } from "./handler/command.js";
+import { commands } from "./lib/indexer.js";
 
 client.on(Events.InteractionCreate, (interaction) => {
 	if (interaction.isCommand()) {
-		void handleCommand(
-			interaction as ChatInputCommandInteraction,
-			commands,
-		);
+		void handleCommand(interaction as ChatInputCommandInteraction, commands);
 	} else if (interaction.isButton()) {
 		void handleButton(interaction, commands);
 	} else if (interaction.isAutocomplete()) {

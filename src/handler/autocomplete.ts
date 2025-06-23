@@ -1,5 +1,5 @@
 import type { AutocompleteInteraction } from "discord.js";
-import { Command } from "../types/command.js";
+import type { Command } from "../types/command.js";
 
 export async function handleAutocomplete(
 	interaction: AutocompleteInteraction,

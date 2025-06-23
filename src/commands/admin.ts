@@ -1,7 +1,7 @@
 import {
+	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
-	type AutocompleteInteraction,
 } from "discord.js";
 import { badgeExists, deleteBadge, getBadges } from "../lib/mongo.js";
 import type { Badge } from "../types/badge.js";

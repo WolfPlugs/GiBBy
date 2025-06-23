@@ -1,10 +1,10 @@
 import {
-	EmbedBuilder,
-	ChatInputCommandInteraction,
-	TextChannel,
+	ActionRowBuilder,
 	ButtonBuilder,
 	ButtonStyle,
-	ActionRowBuilder,
+	type ChatInputCommandInteraction,
+	EmbedBuilder,
+	type TextChannel,
 } from "discord.js";
 
 export async function fireVerification(data: ChatInputCommandInteraction) {

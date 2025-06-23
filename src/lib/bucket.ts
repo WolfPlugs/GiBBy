@@ -1,5 +1,5 @@
+import { createHash } from "node:crypto";
 import { Client } from "minio";
-import { createHash } from "crypto";
 
 const minioClient = new Client({
 	endPoint: process.env["BUCKET_ENDPOINT"]!,

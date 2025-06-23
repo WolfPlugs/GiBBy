@@ -1,6 +1,7 @@
+import { readdirSync } from "node:fs";
 import type { SlashCommandOptionsOnlyBuilder } from "discord.js";
 import type { Command } from "../types/command.d.ts";
-import { readdirSync } from "fs";
+
 const commandFiles = readdirSync("./src/commands");
 export const commandData: SlashCommandOptionsOnlyBuilder[] = [];
 export const commands = new Map<string, Command>();

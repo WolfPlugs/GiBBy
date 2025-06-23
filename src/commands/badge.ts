@@ -1,28 +1,28 @@
 import {
-	SlashCommandBuilder,
-	type ChatInputCommandInteraction,
-	type ButtonInteraction,
-	type AutocompleteInteraction,
-	EmbedBuilder,
-	ButtonBuilder,
-	ButtonStyle,
 	ActionRowBuilder,
-	GuildMember,
+	type AutocompleteInteraction,
+	ButtonBuilder,
+	type ButtonInteraction,
+	ButtonStyle,
+	type ChatInputCommandInteraction,
+	EmbedBuilder,
+	type GuildMember,
+	SlashCommandBuilder,
 } from "discord.js";
 import {
-	canMakeNewBadge,
-	pendBadge,
-	isBlocked,
-	deleteBadge,
-	badgeExists,
-	getBadges,
 	approveBadge,
+	badgeExists,
 	blockUser,
+	canMakeNewBadge,
+	deleteBadge,
+	getBadges,
+	isBlocked,
+	pendBadge,
 	unblockUser,
 } from "../lib/mongo.js";
 
 import { fireVerification } from "../lib/verification.js";
-import { Badge } from "../types/badge.js";
+import type { Badge } from "../types/badge.js";
 
 const blacklistedKeys =
 	process.env["BLACKLISTED_WORDS"]!.toLocaleLowerCase().split(",");
@@ -91,9 +91,9 @@ export async function execute(
 			await interaction.reply({
 				content: `You already have ${(
 					Number(process.env["MAX_BADGES"]!) +
-					((interaction.member as GuildMember).premiumSince
-						? Number(process.env["EXTRA_BOOST_BADGES"]!)
-						: 0)
+						((interaction.member as GuildMember).premiumSince
+							? Number(process.env["EXTRA_BOOST_BADGES"]!)
+							: 0)
 				).toString()} or more badges! (This includes pending badges!)`,
 				ephemeral: true,
 			});
@@ -177,16 +177,12 @@ export async function execute(
 		const badges = await getBadges(user.id, "all");
 		const returnEmbed = new EmbedBuilder()
 			.setTitle(`${user.username}'s Badge Overview`)
-			.setDescription(
-				`${user.username} has ${badges.length.toString()} badges`,
-			)
+			.setDescription(`${user.username} has ${badges.length.toString()} badges`)
 			.setColor("#FF0000");
 
 		for (const badge of badges) {
 			returnEmbed.addFields({
-				name: `${badge.name}${
-					badge.pending ? " `(Pending Approval)`" : ""
-				}`,
+				name: `${badge.name}${badge.pending ? " `(Pending Approval)`" : ""}`,
 				value: badge.badge,
 			});
 		}
@@ -219,14 +215,8 @@ export const buttons = [
 		id: "verify.accept",
 		execute: async (interaction: ButtonInteraction) => {
 			if (interaction.inCachedGuild()) {
-				if (
-					interaction.member.roles.cache.has(
-						process.env["VERIFIER_ROLE"]!,
-					)
-				) {
-					const newEmbed = EmbedBuilder.from(
-						interaction.message.embeds.at(0)!,
-					)
+				if (interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!)) {
+					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
 						.setFooter({
 							text: `Approved by ${interaction.user.username}`,
 						})
@@ -254,14 +244,10 @@ export const buttons = [
 			const originalPrompter = interaction.message.mentions.users.at(0)!;
 			if (interaction.inCachedGuild()) {
 				if (
-					interaction.member.roles.cache.has(
-						process.env["VERIFIER_ROLE"]!,
-					) ||
-					originalPrompter == interaction.user
+					interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!) ||
+					originalPrompter === interaction.user
 				) {
-					const newEmbed = EmbedBuilder.from(
-						interaction.message.embeds.at(0)!,
-					)
+					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
 						.setFooter({
 							text: `Denied by ${interaction.user.username}`,
 						})
@@ -287,17 +273,9 @@ export const buttons = [
 		id: "verify.block",
 		execute: async (interaction: ButtonInteraction) => {
 			if (interaction.inCachedGuild()) {
-				if (
-					interaction.member.roles.cache.has(
-						process.env["VERIFIER_ROLE"]!,
-					)
-				) {
-					await blockUser(
-						interaction.message.mentions.users.at(0)!.id,
-					);
-					const newEmbed = EmbedBuilder.from(
-						interaction.message.embeds.at(0)!,
-					)
+				if (interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!)) {
+					await blockUser(interaction.message.mentions.users.at(0)!.id);
+					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
 						.setFooter({
 							text: `Blocked by ${interaction.user.username}`,
 						})
@@ -319,17 +297,9 @@ export const buttons = [
 		id: "verify.unblock",
 		execute: async (interaction: ButtonInteraction) => {
 			if (interaction.inCachedGuild()) {
-				if (
-					interaction.member.roles.cache.has(
-						process.env["VERIFIER_ROLE"]!,
-					)
-				) {
-					await unblockUser(
-						interaction.message.mentions.users.at(0)!.id,
-					);
-					const newEmbed = EmbedBuilder.from(
-						interaction.message.embeds.at(0)!,
-					)
+				if (interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!)) {
+					await unblockUser(interaction.message.mentions.users.at(0)!.id);
+					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
 						.setFooter({
 							text: `Unblocked by ${interaction.user.username}`,
 						})
