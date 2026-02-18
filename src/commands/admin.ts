@@ -30,7 +30,7 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction: ChatInputCommandInteraction) {
 	if (interaction.inCachedGuild()) {
-		if (interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!)) {
+		if (interaction.member.roles.cache.has(process.env.VERIFIER_ROLE!)) {
 			const selectedUser = interaction.options.getUser("user")!; // User will be defined as it is required by command
 			if (interaction.options.getSubcommand() === "delete") {
 				const name = interaction.options.getString("name")!;

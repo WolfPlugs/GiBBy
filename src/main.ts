@@ -50,4 +50,4 @@ client.on(Events.Invalidated, () => {
 	});
 });
 
-await client.login(process.env["DISCORD_TOKEN"]);
+await client.login(process.env.DISCORD_TOKEN);

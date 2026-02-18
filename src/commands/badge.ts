@@ -24,8 +24,9 @@ import {
 import { fireVerification } from "../lib/verification.js";
 import type { Badge } from "../types/badge.js";
 
-const blacklistedKeys =
-	process.env["BLACKLISTED_WORDS"]!.toLocaleLowerCase().split(",");
+const blacklistedKeys = process.env
+	.BLACKLISTED_WORDS!.toLocaleLowerCase()
+	.split(",");
 
 export const data = new SlashCommandBuilder()
 	.setName("badge")
@@ -90,9 +91,9 @@ export async function execute(
 		if (!(await canMakeNewBadge(interaction.member as GuildMember))) {
 			await interaction.reply({
 				content: `You already have ${(
-					Number(process.env["MAX_BADGES"]!) +
+					Number(process.env.MAX_BADGES || 5) +
 						((interaction.member as GuildMember).premiumSince
-							? Number(process.env["EXTRA_BOOST_BADGES"]!)
+							? Number(process.env.EXTRA_BOOST_BADGES || 5)
 							: 0)
 				).toString()} or more badges! (This includes pending badges!)`,
 				ephemeral: true,
@@ -111,9 +112,9 @@ export async function execute(
 			return;
 		}
 
-		if (image.size > Number(process.env["MAX_BADGE_SIZE"])) {
+		if (image.size > Number(process.env.MAX_BADGE_SIZE)) {
 			await interaction.reply({
-				content: `The image you have attached is over ${(Number(process.env["MAX_BADGE_SIZE"]) / 1048576).toString()}MB, please try to make it smaller!`,
+				content: `The image you have attached is over ${(Number(process.env.MAX_BADGE_SIZE) / 1048576).toString()}MB, please try to make it smaller!`,
 				ephemeral: true,
 			});
 			return;
@@ -215,7 +216,7 @@ export const buttons = [
 		id: "verify.accept",
 		execute: async (interaction: ButtonInteraction) => {
 			if (interaction.inCachedGuild()) {
-				if (interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!)) {
+				if (interaction.member.roles.cache.has(process.env.VERIFIER_ROLE!)) {
 					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
 						.setFooter({
 							text: `Approved by ${interaction.user.username}`,
@@ -244,7 +245,7 @@ export const buttons = [
 			const originalPrompter = interaction.message.mentions.users.at(0)!;
 			if (interaction.inCachedGuild()) {
 				if (
-					interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!) ||
+					interaction.member.roles.cache.has(process.env.VERIFIER_ROLE!) ||
 					originalPrompter === interaction.user
 				) {
 					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
@@ -273,7 +274,7 @@ export const buttons = [
 		id: "verify.block",
 		execute: async (interaction: ButtonInteraction) => {
 			if (interaction.inCachedGuild()) {
-				if (interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!)) {
+				if (interaction.member.roles.cache.has(process.env.VERIFIER_ROLE!)) {
 					await blockUser(interaction.message.mentions.users.at(0)!.id);
 					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
 						.setFooter({
@@ -297,7 +298,7 @@ export const buttons = [
 		id: "verify.unblock",
 		execute: async (interaction: ButtonInteraction) => {
 			if (interaction.inCachedGuild()) {
-				if (interaction.member.roles.cache.has(process.env["VERIFIER_ROLE"]!)) {
+				if (interaction.member.roles.cache.has(process.env.VERIFIER_ROLE!)) {
 					await unblockUser(interaction.message.mentions.users.at(0)!.id);
 					const newEmbed = EmbedBuilder.from(interaction.message.embeds.at(0)!)
 						.setFooter({

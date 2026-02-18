@@ -4,13 +4,13 @@ import type { Badge } from "../types/badge.d.js";
 import type { Entry } from "../types/entry.js";
 import { BucketDelete, BucketUpload } from "./bucket.js";
 
-const client = new MongoClient(process.env["MONGO_DB"]!);
+const client = new MongoClient(process.env.MONGO_DB!);
 
 async function connect(): Promise<Collection<Entry>> {
 	await client.connect();
 	const collection: Collection<Entry> = client
-		.db(process.env["DATABASE_NAME"])
-		.collection(process.env["COLLECTION_NAME"]!);
+		.db(process.env.DATABASE_NAME)
+		.collection(process.env.COLLECTION_NAME!);
 	return collection;
 }
 
@@ -76,8 +76,8 @@ export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
 	const entry = await getEntry(user.id);
 	return !(
 		entry.badges.length >=
-		Number(process.env["MAX_BADGES"]) +
-			(user.premiumSince ? Number(process.env["EXTRA_BOOST_BADGES"]) : 0)
+		Number(process.env.MAX_BADGES) +
+			(user.premiumSince ? Number(process.env.EXTRA_BOOST_BADGES) : 0)
 	);
 }
 
@@ -121,7 +121,7 @@ export async function deleteBadge(userId: string, name: string): Promise<void> {
 	if (!badge) {
 		throw new Error("Badge does not exist");
 	}
-	if (badge.badge.includes(process.env["BUCKET_DOMAIN"]!)) {
+	if (badge.badge.includes(process.env.BUCKET_DOMAIN!)) {
 		// Badges that have not been approved will not be in the bucket
 		await BucketDelete(badge.badge);
 	}

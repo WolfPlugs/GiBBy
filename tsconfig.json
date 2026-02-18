@@ -3,7 +3,6 @@
 		"exactOptionalPropertyTypes": true,
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
-		"noPropertyAccessFromIndexSignature": true,
 		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
@@ -15,7 +14,9 @@
 		"outDir": "dist",
 		"removeComments": true,
 		"lib": ["ESNext"],
-		"target": "ESNext"
+		"target": "ESNext",
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]

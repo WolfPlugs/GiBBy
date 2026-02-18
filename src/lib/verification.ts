@@ -54,9 +54,7 @@ export async function fireVerification(data: ChatInputCommandInteraction) {
 	);
 
 	await (
-		data.client.channels.cache.get(
-			process.env["PROMPT_CHANNEL"]!,
-		) as TextChannel
+		data.client.channels.cache.get(process.env.PROMPT_CHANNEL!) as TextChannel
 	).send({
 		content: `<@${user.id}>`,
 		embeds: [embed],
