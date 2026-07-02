@@ -1,6 +1,7 @@
 import {
 	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import { badgeExists, deleteBadge, getBadges } from "../lib/mongo.js";
@@ -38,7 +39,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 					await deleteBadge(selectedUser.id, name).then(async () => {
 						await interaction.reply({
 							content: `Deleted badge "${name}" from ${selectedUser.username}`,
-							ephemeral: true,
+							flags: MessageFlags.Ephemeral,
 						});
 						try {
 							return await selectedUser.send({
@@ -54,7 +55,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 		} else {
 			await interaction.reply({
 				content: "You are not authorized to use this command",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		}
 	}

@@ -7,6 +7,7 @@ import {
 	type ChatInputCommandInteraction,
 	EmbedBuilder,
 	type GuildMember,
+	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
 import {
@@ -84,7 +85,7 @@ export async function execute(
 			await interaction.reply({
 				content:
 					"You are blocked from making new badges! Please contact an admin if you believe this is a mistake.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -96,7 +97,7 @@ export async function execute(
 							? Number(process.env.EXTRA_BOOST_BADGES || 5)
 							: 0)
 				).toString()} or more badges! (This includes pending badges!)`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -107,7 +108,7 @@ export async function execute(
 		if (blacklistedKeys.some((word) => name.includes(word))) {
 			await interaction.reply({
 				content: `You can't use that name.`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -115,7 +116,7 @@ export async function execute(
 		if (image.size > Number(process.env.MAX_BADGE_SIZE)) {
 			await interaction.reply({
 				content: `The image you have attached is over ${(Number(process.env.MAX_BADGE_SIZE) / 1048576).toString()}MB, please try to make it smaller!`,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -123,7 +124,7 @@ export async function execute(
 			await interaction.reply({
 				content:
 					"Custom emojis will not appear in the badge name, and are thus blocked.",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -131,7 +132,7 @@ export async function execute(
 		if (await badgeExists(id, name, "all")) {
 			await interaction.reply({
 				content: "You already have a badge with that name!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			return;
 		}
@@ -142,7 +143,7 @@ export async function execute(
 		}).then(async () => {
 			await interaction.reply({
 				content: "Badge is now pending approval!",
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 			await fireVerification(interaction);
 		});
@@ -157,14 +158,14 @@ export async function execute(
 			await deleteBadge(id, name).then(async () => {
 				await interaction.reply({
 					content: "Badge deleted!",
-					ephemeral: true,
+					flags: MessageFlags.Ephemeral,
 				});
 			});
 			return;
 		}
 		await interaction.reply({
 			content: "You do not have an active badge with that name!",
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 		return;
 	}
@@ -190,7 +191,7 @@ export async function execute(
 
 		await interaction.reply({
 			embeds: [returnEmbed],
-			ephemeral: true,
+			flags: MessageFlags.Ephemeral,
 		});
 	}
 }
@@ -233,7 +234,7 @@ export const buttons = [
 				} else {
 					await interaction.reply({
 						content: "You cannot do that!",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			}
@@ -264,7 +265,7 @@ export const buttons = [
 				} else {
 					await interaction.reply({
 						content: "You cannot do that!",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			}
@@ -288,7 +289,7 @@ export const buttons = [
 				} else {
 					await interaction.reply({
 						content: "You cannot do that!",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			}
@@ -312,7 +313,7 @@ export const buttons = [
 				} else {
 					await interaction.reply({
 						content: "You cannot do that!",
-						ephemeral: true,
+						flags: MessageFlags.Ephemeral,
 					});
 				}
 			}

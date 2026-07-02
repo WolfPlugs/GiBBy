@@ -1,4 +1,4 @@
-import type { ChatInputCommandInteraction } from "discord.js";
+import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
 import type { Command } from "../types/command.js";
 
 export async function handleCommand(
@@ -12,7 +12,7 @@ export async function handleCommand(
 		try {
 			await interaction.reply({
 				content: `There was an error while executing this command! Debug: \`${(error as Error).message}\``,
-				ephemeral: true,
+				flags: MessageFlags.Ephemeral,
 			});
 		} catch (e) {
 			console.error(
