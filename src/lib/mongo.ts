@@ -29,9 +29,9 @@ async function getEntry(userId: string): Promise<Entry> {
 		userId,
 		badges: [],
 		blocked: false,
-  };
+	};
 	// quick fix to stop the database being filled with empty junk
-  // await mongo.insertOne(newEntry);
+	// await mongo.insertOne(newEntry);
 	return newEntry;
 }
 
@@ -85,9 +85,13 @@ export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
 // SETTERS
 
 export async function pendBadge(userId: string, badge: Badge): Promise<void> {
-  badge.pending = true;
+	badge.pending = true;
 	// Upsert here, since the core getEntry no longer guarantees the existence of a badge
-	await mongo.updateOne({ userId }, { $push: { badges: badge }, $setOnInsert: {blocked: false} }, {upsert: true});
+	await mongo.updateOne(
+		{ userId },
+		{ $push: { badges: badge }, $setOnInsert: { blocked: false } },
+		{ upsert: true },
+	);
 }
 
 export async function approveBadge(
@@ -113,8 +117,12 @@ export async function blockUser(userId: string): Promise<void> {
 }
 
 export async function unblockUser(userId: string): Promise<void> {
-  // This was also changed to upsert
-	await mongo.updateOne({ userId }, { $set: { blocked: false }, $setOnInsert: {badges:[]} }, {upsert: true});
+	// This was also changed to upsert
+	await mongo.updateOne(
+		{ userId },
+		{ $set: { blocked: false }, $setOnInsert: { badges: [] } },
+		{ upsert: true },
+	);
 }
 
 // DELETE FUNCTIONS
