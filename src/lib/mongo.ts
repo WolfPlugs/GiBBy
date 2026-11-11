@@ -1,4 +1,3 @@
-import type { GuildMember } from "discord.js";
 import { type Collection, MongoClient } from "mongodb";
 import type { Badge } from "../types/badge.d.js";
 import type { Entry } from "../types/entry.js";
@@ -15,6 +14,11 @@ async function connect(): Promise<Collection<Entry>> {
 }
 
 const mongo = await connect();
+const badgeLimits = client
+	.db(process.env.DATABASE_NAME)
+	.collection<{ _id: string; slots: number }>(
+		`${mongo.collectionName}_badge_limits`,
+	);
 
 export async function destroy(): Promise<void> {
 	await client.close();
@@ -73,16 +77,24 @@ export async function getBadge(
 	return foundBadge;
 }
 
-export async function canMakeNewBadge(user: GuildMember): Promise<boolean> {
-	const entry = await getEntry(user.id);
-	return !(
-		entry.badges.length >=
-		Number(process.env.MAX_BADGES) +
-			(user.premiumSince ? Number(process.env.EXTRA_BOOST_BADGES) : 0)
+export async function getBadgeLimit(userId: string, isBooster: boolean) {
+	const override = await badgeLimits.findOne({ _id: userId });
+	if (override?.slots) return override.slots;
+	return (
+		Number(process.env.MAX_BADGES || 5) +
+		(isBooster ? Number(process.env.EXTRA_BOOST_BADGES || 5) : 0)
 	);
 }
 
 // SETTERS
+
+export async function setBadgeLimit(userId: string, slots: number) {
+	await badgeLimits.updateOne(
+		{ _id: userId },
+		{ $set: { slots } },
+		{ upsert: true },
+	);
+}
 
 export async function pendBadge(userId: string, badge: Badge): Promise<void> {
 	badge.pending = true;

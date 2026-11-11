@@ -31,3 +31,7 @@
 5. Install packages using a node package manager (I suggest [PNPM](https://pnpm.io/)): `pnpm i`
 6. Build: `pnpm build`
 7. Run: `pnpm start`
+
+## Badge limits for sponsors
+
+Members with the configured verifier role can use `/admin badge-limit user-id:<Discord ID>` to set a GitHub Sponsor's total limit to 15 badges. This limit also applies when the sponsor boosts the server. Use the optional `slots` argument to set a different total, or set it to `0` to restore the normal allowance, including any booster slots.
