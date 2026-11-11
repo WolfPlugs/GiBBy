@@ -1,0 +1,29 @@
+.github/readme.md
+  s_98aa36d369b651::t_79351a3377bfda 35-37
+  s_98aa36d369b651::t_10fd9c3653d74c 34
+src/lib/mongo.ts
+  s_98aa36d369b651::t_79351a3377bfda 17-21,80-85,91-92
+  s_98aa36d369b651::t_18c7e6373fa0b8 93-98
+src/commands/admin.ts
+  s_98aa36d369b651::t_79351a3377bfda 11,38-51,57-74
+  s_98aa36d369b651::t_12a10d5ad91583 7-10,12
+  s_98aa36d369b651::t_a7d825d538d564 17,35-37,75-81
+src/commands/badge.ts
+  s_98aa36d369b651::t_49107163722925 17,91-98,100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bf4a4a357927902ae80d2b2b9aed5a3a85915da8",
+  "prompts": {},
+  "sessions": {
+    "s_98aa36d369b651": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cabe-6e95-74e0-9d18-078355fc40fe",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Wolfkid200444 <32025746+Wolfkid200444@users.noreply.github.com>"
+    }
+  }
+}
