@@ -6,7 +6,6 @@ import {
 	ButtonStyle,
 	type ChatInputCommandInteraction,
 	EmbedBuilder,
-	type GuildMember,
 	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
@@ -14,8 +13,8 @@ import {
 	approveBadge,
 	badgeExists,
 	blockUser,
-	canMakeNewBadge,
 	deleteBadge,
+	getBadgeLimit,
 	getBadges,
 	isBlocked,
 	pendBadge,
@@ -89,14 +88,16 @@ export async function execute(
 			});
 			return;
 		}
-		if (!(await canMakeNewBadge(interaction.member as GuildMember))) {
+		const [badges, limit] = await Promise.all([
+			getBadges(id, "all"),
+			getBadgeLimit(
+				id,
+				interaction.inCachedGuild() && interaction.member.premiumSince !== null,
+			),
+		]);
+		if (badges.length >= limit) {
 			await interaction.reply({
-				content: `You already have ${(
-					Number(process.env.MAX_BADGES || 5) +
-						((interaction.member as GuildMember).premiumSince
-							? Number(process.env.EXTRA_BOOST_BADGES || 5)
-							: 0)
-				).toString()} or more badges! (This includes pending badges!)`,
+				content: `You already have ${limit} or more badges! (This includes pending badges!)`,
 				flags: MessageFlags.Ephemeral,
 			});
 			return;
@@ -129,7 +130,7 @@ export async function execute(
 			return;
 		}
 
-		if (await badgeExists(id, name, "all")) {
+		if (badges.some((badge) => badge.name === name)) {
 			await interaction.reply({
 				content: "You already have a badge with that name!",
 				flags: MessageFlags.Ephemeral,
@@ -137,10 +138,14 @@ export async function execute(
 			return;
 		}
 
-		await pendBadge(id, {
-			name,
-			badge: image.url,
-		}).then(async () => {
+		const badge: Badge = { name, badge: image.url };
+		if (badges.length >= 10) {
+			badge.rarity = 5;
+		} else if (badges.length >= 5) {
+			badge.rarity = 3;
+		}
+
+		await pendBadge(id, badge).then(async () => {
 			await interaction.reply({
 				content: "Badge is now pending approval!",
 				flags: MessageFlags.Ephemeral,
