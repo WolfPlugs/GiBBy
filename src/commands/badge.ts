@@ -130,7 +130,7 @@ export async function execute(
 			return;
 		}
 
-		if (await badgeExists(id, name, "all")) {
+		if (badges.some((badge) => badge.name === name)) {
 			await interaction.reply({
 				content: "You already have a badge with that name!",
 				flags: MessageFlags.Ephemeral,
@@ -138,10 +138,14 @@ export async function execute(
 			return;
 		}
 
-		await pendBadge(id, {
-			name,
-			badge: image.url,
-		}).then(async () => {
+		const badge: Badge = { name, badge: image.url };
+		if (badges.length >= 10) {
+			badge.rarity = 5;
+		} else if (badges.length >= 5) {
+			badge.rarity = 3;
+		}
+
+		await pendBadge(id, badge).then(async () => {
 			await interaction.reply({
 				content: "Badge is now pending approval!",
 				flags: MessageFlags.Ephemeral,
