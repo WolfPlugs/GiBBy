@@ -138,7 +138,7 @@ export async function execute(
 			return;
 		}
 
-		const badge: Badge = { name, badge: image.url };
+		const badge: Badge = { name, badge: image.url, rarity: 1 };
 		if (badges.length >= 10) {
 			badge.rarity = 5;
 		} else if (badges.length >= 5) {

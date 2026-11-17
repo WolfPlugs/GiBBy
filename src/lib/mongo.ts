@@ -14,6 +14,37 @@ async function connect(): Promise<Collection<Entry>> {
 }
 
 const mongo = await connect();
+await mongo.updateMany(
+	{ badges: { $elemMatch: { rarity: { $exists: false } } } },
+	[
+		{
+			$set: {
+				badges: {
+					$map: {
+						input: { $range: [0, { $size: "$badges" }] },
+						as: "i",
+						in: {
+							$mergeObjects: [
+								{
+									rarity: {
+										$switch: {
+											branches: [
+												{ case: { $lt: ["$$i", 5] }, then: 1 },
+												{ case: { $lt: ["$$i", 10] }, then: 3 },
+											],
+											default: 5,
+										},
+									},
+								},
+								{ $arrayElemAt: ["$badges", "$$i"] },
+							],
+						},
+					},
+				},
+			},
+		},
+	],
+);
 const badgeLimits = client
 	.db(process.env.DATABASE_NAME)
 	.collection<{ _id: string; slots: number }>(
