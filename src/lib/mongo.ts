@@ -27,13 +27,11 @@ await mongo.updateMany(
 							$mergeObjects: [
 								{
 									rarity: {
-										$switch: {
-											branches: [
-												{ case: { $lt: ["$$i", 5] }, then: 1 },
-												{ case: { $lt: ["$$i", 10] }, then: 3 },
-											],
-											default: 5,
-										},
+										$cond: [
+											{ $lt: ["$$i", 5] },
+											1,
+											{ $cond: [{ $lt: ["$$i", 10] }, 3, 5] },
+										],
 									},
 								},
 								{ $arrayElemAt: ["$badges", "$$i"] },
